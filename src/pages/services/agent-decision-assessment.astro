@@ -1,0 +1,115 @@
+---
+import AssessmentCta from "../../components/services/AssessmentCta.astro";
+import OfferCard from "../../components/services/OfferCard.astro";
+import business from "../../data/business.json";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getAssessmentFormUrl } from "../../lib/assessment-form";
+import "../../styles/assessment-components.css";
+import "../../styles/assessment-service.css";
+
+const assessmentFormUrl = getAssessmentFormUrl(
+  import.meta.env.PUBLIC_ASSESSMENT_FORM_URL,
+  import.meta.env.PROD,
+);
+const { assessment, poc } = business.services;
+const faq = [
+  {
+    question: "评估会直接交付生产系统吗？",
+    answer: assessment.exclusions[0],
+  },
+  {
+    question: "范围发生变化时如何处理？",
+    answer: business.commercialPolicy.changes,
+  },
+  {
+    question: "退款和取消如何处理？",
+    answer: business.commercialPolicy.refunds,
+  },
+  {
+    question: "评估是否承诺准确率、节省或合规？",
+    answer: business.claimPolicy.rule,
+  },
+] as const;
+---
+
+<BaseLayout
+  title="AI Agent 决策评估 | Jev Signal"
+  description="用五个工作日评估一个边界清晰的 AI Agent 决策节点，获得风险、证据缺口、实验方案与明确的停止或继续建议。"
+  canonicalPath="/services/agent-decision-assessment"
+>
+  <div class="assessment-page">
+    <section class="assessment-hero" aria-labelledby="assessment-title">
+      <div>
+        <p class="service-kicker">FIXED-SCOPE / EVIDENCE-FIRST</p>
+        <h1 id="assessment-title">
+          <span class="assessment-title__phrase assessment-title__service">AI Agent</span>
+          {" "}
+          <span class="assessment-title__phrase assessment-title__service">决策评估：</span>
+          <span class="assessment-title__phrase">先判断，</span>
+          <span class="assessment-title__phrase">再决定</span>
+          <span class="assessment-title__phrase">是否构建。</span>
+        </h1>
+      </div>
+      <div class="assessment-hero__brief">
+        <p>{business.positioning.statement}</p>
+        <dl>
+          <div><dt>边界</dt><dd>一个决策问题</dd></div>
+          <div><dt>周期</dt><dd>{assessment.timeline.label}</dd></div>
+          <div><dt>起价</dt><dd>{assessment.price.currency} {assessment.price.amount.toLocaleString("en-US")}</dd></div>
+        </dl>
+        <AssessmentCta href={assessmentFormUrl} />
+      </div>
+    </section>
+
+    <section class="service-section" aria-labelledby="offer-title">
+      <div class="section-heading">
+        <p class="service-kicker">COMMERCIAL PATH</p>
+        <h2 id="offer-title">固定范围，明确退出点</h2>
+        <p>评估是独立交付。只有证据支持继续时，才单独确认一个决策节点的非生产 PoC。</p>
+      </div>
+      <div class="offer-grid">
+        <OfferCard {...assessment} featured />
+        <OfferCard {...poc} />
+      </div>
+    </section>
+
+    <section class="service-section qualification" aria-labelledby="qualification-title">
+      <div class="section-heading">
+        <p class="service-kicker">QUALIFICATION</p>
+        <h2 id="qualification-title">申请前检查</h2>
+      </div>
+      <div class="qualification-grid">
+        <div class="qualification-list qualification-list--fit">
+          <h3>适合开始评估</h3>
+          <ul>{business.positioning.fit.map((item) => <li>{item}</li>)}</ul>
+        </div>
+        <div class="qualification-list">
+          <h3>暂不适合</h3>
+          <ul>{business.positioning.notFit.map((item) => <li>{item}</li>)}</ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="service-section" aria-labelledby="faq-title">
+      <div class="section-heading">
+        <p class="service-kicker">FAQ</p>
+        <h2 id="faq-title">常见问题</h2>
+      </div>
+      <div class="faq-list">
+        {faq.map((item) => (
+          <details>
+            <summary>{item.question}</summary>
+            <p>{item.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section class="service-close" aria-labelledby="service-close-title">
+      <p class="service-kicker">ONE DECISION / NO HIDDEN SUBMISSION</p>
+      <h2 id="service-close-title">准备好一个明确问题，再打开外部表单。</h2>
+      <p>{business.rightsAndPrivacy.dataMinimization}</p>
+      <AssessmentCta href={assessmentFormUrl} secondary />
+    </section>
+  </div>
+</BaseLayout>

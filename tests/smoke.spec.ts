@@ -77,3 +77,41 @@ test("switches case wall text to Chinese translations", async ({ page }) => {
   await expect(card.locator(".translated-text")).toBeVisible();
   await expect(card.locator(".translated-text")).toContainText("瞬时压实");
 });
+
+test("opens the external assessment path without claiming submission", async ({ page }) => {
+  // Given: the assessment service route is opened with a CTA event observer.
+  await page.addInitScript(() => {
+    window.addEventListener("jev:cta-open", (event) => {
+      document.documentElement.dataset.ctaEvent = JSON.stringify(event.detail);
+    });
+  });
+  const response = await page.goto("/services/agent-decision-assessment");
+
+  // When: the user inspects and activates the external assessment CTA.
+  expect(response?.status()).toBe(200);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("AI Agent 决策评估");
+  await expect(page.getByText("CNY 2,999", { exact: true }).first()).toBeVisible();
+  const cta = page.getByRole("link", { name: "前往飞书填写评估申请" }).first();
+  await expect(cta).toHaveAttribute("rel", "noopener noreferrer nofollow");
+  await cta.evaluate((link) => link.addEventListener("click", (event) => event.preventDefault()));
+  await cta.click();
+
+  // Then: only an open event and fixed, non-sensitive attribution are observable.
+  const href = await cta.getAttribute("href");
+  expect(href).toContain("source=service-assessment");
+  expect(href).toContain("utm_source=jev-case");
+  expect(await page.locator("html").getAttribute("data-cta-event")).toBe(
+    JSON.stringify({
+      name: "assessment-form",
+      source: "service-assessment",
+      destination: "external-form",
+    }),
+  );
+  await expect(page.getByText(/提交后由飞书接收/).first()).toBeVisible();
+  await expect(page.getByText(/提交成功/)).toHaveCount(0);
+
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - window.innerWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(1);
+});

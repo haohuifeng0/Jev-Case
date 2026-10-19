@@ -1,0 +1,41 @@
+---
+interface Props {
+  href: string;
+  secondary?: boolean;
+}
+
+const { href, secondary = false } = Astro.props;
+---
+
+<div class="assessment-cta">
+  <a
+    class:list={["assessment-cta__link", { "assessment-cta__link--secondary": secondary }]}
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer nofollow"
+    data-assessment-cta
+  >
+    前往飞书填写评估申请
+    <span aria-hidden="true">↗</span>
+  </a>
+  <p>
+    这是外部表单。提交后由飞书接收；本网站和公开仓库不接收或保存你的表单内容。
+    请勿提交密钥、受监管数据或机密生产数据。
+  </p>
+</div>
+
+<script>
+  const detail = {
+    name: "assessment-form",
+    source: "service-assessment",
+    destination: "external-form",
+  } as const;
+
+  for (const link of document.querySelectorAll<HTMLAnchorElement>(
+    "[data-assessment-cta]",
+  )) {
+    link.addEventListener("click", () => {
+      window.dispatchEvent(new CustomEvent("jev:cta-open", { detail }));
+    });
+  }
+</script>

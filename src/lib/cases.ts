@@ -1,18 +1,15 @@
 import rawCases from "../data/cases.json";
-import type { CaseDatabase, CaseItem, CaseMedia } from "./types";
+import { parseCaseDatabase } from "./data-loader";
+import type { CaseItem, CaseMedia } from "./types";
 
-const database = rawCases as CaseDatabase;
-
-if (database.schemaVersion !== 1 || !Array.isArray(database.cases)) {
-  throw new Error("cases.json does not match schemaVersion 1");
-}
+const database = parseCaseDatabase(rawCases);
 
 export function getCases(): CaseItem[] {
-  return database.cases;
+  return [...database.cases];
 }
 
 export function getCaseAliases() {
-  return database.aliases ?? [];
+  return [...database.aliases];
 }
 
 export function getGeneratedAt(): string {

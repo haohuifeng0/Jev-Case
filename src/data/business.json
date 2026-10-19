@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "canonicalSource": "src/data/business.json",
+  "positioning": {
+    "statement": "Jev Case helps an enterprise evaluate one bounded AI Agent decision before considering broader implementation.",
+    "fit": [
+      "A named business owner can provide one decision question and representative, lawfully shareable examples.",
+      "The decision can be reviewed by a human and evaluated against agreed acceptance criteria.",
+      "The buyer wants evidence and a bounded next-step recommendation rather than an outcome assurance."
+    ],
+    "notFit": [
+      "A production deployment, ongoing managed service, or broad platform transformation is required.",
+      "The work requires legal, regulatory, security, or procurement approval from Jev Case.",
+      "The buyer cannot provide a decision owner or suitable evaluation inputs."
+    ]
+  },
+  "services": {
+    "assessment": {
+      "name": "AI Agent Decision Assessment",
+      "owner": "Jev Case service operator",
+      "price": {
+        "currency": "CNY",
+        "amount": 2999
+      },
+      "timeline": {
+        "min": 5,
+        "max": 5,
+        "unit": "working_days",
+        "label": "five working days"
+      },
+      "inputs": [
+        "One named decision question and business owner",
+        "Current workflow and constraints",
+        "Representative, lawfully shareable examples",
+        "Available acceptance evidence"
+      ],
+      "outputs": [
+        "Decision-node definition and fit assessment",
+        "Risk, evidence, and data-gap register",
+        "Recommended experiment and acceptance criteria",
+        "Written recommendation to stop, refine, or proceed to a PoC"
+      ],
+      "exclusions": [
+        "Production implementation or integration",
+        "Custom model training or data labeling",
+        "Legal, compliance, security, or procurement approval",
+        "Assurance of accuracy, savings, or production suitability",
+        "Work beyond the agreed decision question"
+      ],
+      "acceptance": "The listed outputs are delivered for the agreed decision question and reviewed in one handoff meeting; factual corrections reported within two working days are incorporated once.",
+      "nextAction": "Submit the Feishu assessment form for qualification and scheduling."
+    },
+    "poc": {
+      "name": "Single-Decision-Node PoC",
+      "owner": "Jev Case service operator",
+      "price": {
+        "currency": "CNY",
+        "amount": 19800
+      },
+      "timeline": {
+        "min": 2,
+        "max": 3,
+        "unit": "weeks",
+        "label": "two to three weeks"
+      },
+      "decisionNodeLimit": 1,
+      "inputs": [
+        "A completed or equivalent decision assessment",
+        "One agreed decision node and accountable sponsor",
+        "Representative, lawfully shareable evaluation inputs",
+        "Written acceptance criteria and access constraints"
+      ],
+      "outputs": [
+        "A non-production proof of concept for one decision node",
+        "Evaluation record against the agreed acceptance criteria",
+        "Risk and limitation register",
+        "Handoff notes and recommendation to stop, iterate, or plan separately for production"
+      ],
+      "exclusions": [
+        "Production deployment, uptime commitment, or ongoing operation",
+        "More than one decision node",
+        "Custom model training or bulk data preparation",
+        "Legal, compliance, security, or procurement approval",
+        "Unagreed integrations, licenses, or third-party fees"
+      ],
+      "acceptance": "The PoC demonstrates the single agreed decision node in the agreed non-production environment, and the evaluation record documents each acceptance criterion as met, not met, or not evaluated.",
+      "nextAction": "Approve a written PoC statement of work after the assessment recommendation."
+    }
+  },
+  "commercialPolicy": {
+    "changes": "A scope, input, dependency, or acceptance change requires a written change request. Work pauses until impact on price and timeline is accepted. Unaccepted changes remain excluded.",
+    "refunds": "Before kickoff, prepaid fees are refundable. After kickoff, completed work and reserved delivery capacity are not refundable. If the operator cancels, the undelivered portion is refunded. Mandatory law prevails where applicable.",
+    "customerDelay": "A customer-caused delay may move the delivery window. A delay longer than ten working days requires rescheduling or a written change request."
+  },
+  "trustPolicy": {
+    "verificationStatuses": {
+      "verified": "Dated public evidence shows a direct Jev call plus a runnable check or public demo under the published rubric.",
+      "limited": "Dated public evidence supports a direct relationship, but a runnable check or public demo is unavailable or incomplete.",
+      "unverified": "Available evidence is insufficient, inaccessible, contradictory, or does not establish a direct relationship."
+    },
+    "catalogInclusion": "Catalog inclusion is curation, not endorsement, certification, ranking, or a service recommendation.",
+    "sponsorship": "Payment or sponsorship does not change verification status, evidence requirements, catalog order, or editorial conclusions. Any sponsored content must be labeled separately."
+  },
+  "rightsAndPrivacy": {
+    "rights": "Public excerpts, names, media, trademarks, and linked materials remain the property of their respective authors, owners, and platforms. Jev Case adds curation and commentary only within applicable permissions.",
+    "formRecipient": "Feishu receives assessment form submissions.",
+    "publicRepositoryBoundary": "Public repositories receive no form submissions, lead records, customer prompts, private datasets, credentials, or customer deliverables.",
+    "dataMinimization": "Submit only information needed for qualification. Do not submit secrets, regulated data, or confidential production data through the public form.",
+    "retention": "Retention and deletion of submitted form data are handled in the private Feishu workspace under the operator's access controls and applicable agreement."
+  },
+  "metrics": {
+    "qualifiedLead": "An organization with a named owner, one identifiable AI Agent decision question, relevant timing, access to suitable inputs, and plausible authority and budget for the assessment.",
+    "assessmentCall": "A completed live qualification conversation in which fit, decision scope, owner, inputs, constraints, and next action are discussed; a booking or unanswered invitation does not count.",
+    "paidAssessment": "An assessment with written scope acceptance and cleared payment; proposals, verbal interest, unpaid pilots, and refunds do not count.",
+    "paidPoc": "A single-decision-node PoC with a signed or otherwise accepted statement of work and cleared payment; assessments and unpaid experiments do not count."
+  },
+  "claimPolicy": {
+    "rule": "Claims must be attributable, dated, scoped to the available evidence, and separated from customer-specific conclusions.",
+    "requiresCustomerEvidence": [
+      "Accuracy or quality outcomes",
+      "Cost, time, or labor savings",
+      "Legal or regulatory compliance",
+      "Security posture",
+      "Production suitability"
+    ]
+  }
+}

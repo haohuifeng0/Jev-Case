@@ -1,0 +1,39 @@
+---
+interface Props {
+  name: string;
+  price: {
+    currency: string;
+    amount: number;
+  };
+  timeline: {
+    label: string;
+  };
+  outputs: readonly string[];
+  exclusions: readonly string[];
+  featured?: boolean;
+}
+
+const { name, price, timeline, outputs, exclusions, featured = false } = Astro.props;
+const displayPrice = `${price.currency} ${price.amount.toLocaleString("en-US")}`;
+---
+
+<article class:list={["offer-card", { "offer-card--featured": featured }]}>
+  <div class="offer-card__head">
+    <p class="service-kicker">{featured ? "START HERE" : "NEXT STEP"}</p>
+    <h3>{name}</h3>
+    <p class="offer-card__price">{displayPrice}</p>
+    <p class="offer-card__timeline">固定周期：{timeline.label}</p>
+  </div>
+  <div class="offer-card__section">
+    <h4>交付内容</h4>
+    <ul>
+      {outputs.map((output) => <li>{output}</li>)}
+    </ul>
+  </div>
+  <div class="offer-card__section offer-card__section--muted">
+    <h4>不包含</h4>
+    <ul>
+      {exclusions.map((exclusion) => <li>{exclusion}</li>)}
+    </ul>
+  </div>
+</article>
