@@ -34,6 +34,7 @@ Accent colors communicate hierarchy or interaction, not decoration alone.
 
 - Display and body: `var(--font-display)`, Space Grotesk.
 - Labels and metadata: `var(--font-mono)`, IBM Plex Mono.
+- Scenario titles use the shared Display scale and define explicit phrase segments in content; browsers may wrap between segments but never inside one.
 
 ## 4. Spacing & Layout
 
@@ -61,6 +62,38 @@ Accent colors communicate hierarchy or interaction, not decoration alone.
 - **Accessibility:** descriptive link text and explicit external-form notice.
 - **Motion:** short transform feedback only.
 
+### Verification Record
+
+- **Structure:** status badge, dated freshness, six named checks, reviewer notes, and immutable evidence links.
+- **Variants:** verified uses acid, limited uses cyan, and unverified or needs-recheck uses coral; text labels remain primary.
+- **States:** current and needs-recheck, plus visible hover/focus on evidence links.
+- **Accessibility:** status is announced with a complete label; color never carries status alone.
+- **Motion:** none; evidence comparison benefits from a stable reading surface.
+
+### Project Card
+
+- **Structure:** category and review metadata, linked title, catalog summary, optional Agent/type tags, and one detail action.
+- **Variants:** reviewed status labels and the explicit `尚未审阅` state; catalog inclusion never implies endorsement.
+- **States:** default, filtered-hidden, linked-title hover, and visible keyboard focus.
+- **Accessibility:** semantic article and heading structure; status remains text-first and static cards render without JavaScript.
+- **Motion:** none; filtering updates visibility without decorative transitions.
+
+### Scenario Project Card
+
+- **Structure:** category and review state, project title, catalog summary, and detail link.
+- **Variants:** existing verification status or the explicit `尚未审阅` state.
+- **States:** default, linked-title hover, and visible keyboard focus.
+- **Accessibility:** status is textual; catalog inclusion is paired with a non-endorsement caveat.
+- **Motion:** none; comparison content remains stable.
+
+### Media Fallback
+
+- **Structure:** reserved media surface plus plain-text failure state; surrounding case text and source provenance remain available.
+- **Variants:** poster fallback, unavailable video, and hidden broken avatar.
+- **States:** loading, available, and unavailable.
+- **Accessibility:** failure copy states that text and original-source links remain usable.
+- **Motion:** none.
+
 ## 6. Motion & Interaction
 
 - Micro interactions use 140ms ease-out.
@@ -76,4 +109,4 @@ The system is borders-first. Panels use tonal shifts between `--ink`, `--ink-sof
 
 - Target WCAG 2.2 AA with full keyboard reachability and 4.5:1 body-text contrast.
 - External actions identify their destination and data boundary before activation.
-- No accepted debt is introduced by the assessment service route.
+- No accepted debt is introduced by the assessment service or methodology routes.

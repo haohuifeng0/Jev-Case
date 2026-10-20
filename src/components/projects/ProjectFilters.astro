@@ -1,0 +1,97 @@
+---
+import type { DiscoveryOptions } from "../../lib/project-query";
+
+interface Props {
+  options: DiscoveryOptions;
+  total: number;
+}
+
+const { options, total } = Astro.props;
+---
+
+<form class="project-filters" data-project-filters aria-label="项目筛选" action="/projects" method="get">
+  <label class="project-filters__search">
+    <span>搜索项目</span>
+    <input type="search" name="q" placeholder="名称、简介或标签" autocomplete="off" />
+  </label>
+  <label>
+    <span>分类</span>
+    <select name="category">
+      <option value="">全部分类</option>
+      {options.categories.map((category) => <option value={category.key}>{category.title}</option>)}
+    </select>
+  </label>
+  <label>
+    <span>Agent</span>
+    <select name="agent">
+      <option value="">全部 Agent</option>
+      {options.agents.map((agent) => <option value={agent}>{agent}</option>)}
+    </select>
+  </label>
+  <label>
+    <span>类型</span>
+    <select name="type">
+      <option value="">全部类型</option>
+      {options.types.map((type) => <option value={type}>{type}</option>)}
+    </select>
+  </label>
+  <div class="project-filters__actions">
+    <button type="submit">应用筛选</button>
+    <button type="reset">重置筛选</button>
+  </div>
+  <p class="project-filters__result" role="status" aria-live="polite">
+    显示 <strong data-project-count>{total}</strong> / {total} 个项目
+  </p>
+</form>
+
+<p class="project-empty" data-project-empty hidden>没有匹配的项目。请清除部分筛选条件后重试。</p>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("[data-project-filters]");
+  if (form !== null) {
+    const cards = [...document.querySelectorAll<HTMLElement>("[data-project-card]")];
+    const count = form.querySelector<HTMLElement>("[data-project-count]");
+    const empty = document.querySelector<HTMLElement>("[data-project-empty]");
+    const search = form.elements.namedItem("q");
+    const selects = ["category", "agent", "type"].map((name) => form.elements.namedItem(name));
+    const params = new URLSearchParams(window.location.search);
+
+    if (search instanceof HTMLInputElement) search.value = params.get("q") ?? "";
+    for (const control of selects) {
+      if (!(control instanceof HTMLSelectElement)) continue;
+      const requested = params.get(control.name);
+      if (requested !== null && [...control.options].some((option) => option.value === requested)) {
+        control.value = requested;
+      }
+    }
+
+    const update = () => {
+      const query = search instanceof HTMLInputElement ? search.value.trim().toLocaleLowerCase() : "";
+      let visible = 0;
+      for (const card of cards) {
+        const matches = selects.every((control) =>
+          !(control instanceof HTMLSelectElement)
+          || control.value === ""
+          || card.dataset[control.name] === control.value,
+        ) && (query === "" || card.dataset.search?.includes(query) === true);
+        card.hidden = !matches;
+        if (matches) visible += 1;
+      }
+      if (count !== null) count.textContent = String(visible);
+      if (empty !== null) empty.hidden = visible !== 0;
+    };
+
+    form.addEventListener("input", update);
+    form.addEventListener("submit", (event) => event.preventDefault());
+    form.addEventListener("reset", (event) => {
+      event.preventDefault();
+      if (search instanceof HTMLInputElement) search.value = "";
+      for (const control of selects) {
+        if (control instanceof HTMLSelectElement) control.value = "";
+      }
+      window.history.replaceState(null, "", window.location.pathname);
+      update();
+    });
+    update();
+  }
+</script>

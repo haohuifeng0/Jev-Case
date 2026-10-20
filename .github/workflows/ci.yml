@@ -37,6 +37,8 @@ jobs:
         run: npm run check
 
       - name: Build Astro site
+        env:
+          PUBLIC_ASSESSMENT_FORM_URL: https://wenjuan.feishu.cn/m/cfm?assessment_fixture=ci
         run: npm run build
 
       - name: Install Playwright browsers

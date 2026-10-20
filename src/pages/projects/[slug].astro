@@ -1,0 +1,121 @@
+---
+import VerificationRecord from "../../components/verification/VerificationRecord.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { compactText } from "../../lib/cases";
+import { projectData } from "../../lib/project-data";
+import {
+  getCatalogProvenance,
+  getProjectView,
+  type Project,
+} from "../../lib/project-query";
+import { withBasePath } from "../../lib/metadata";
+import "../../styles/project-detail.css";
+import "../../styles/methodology.css";
+
+export function getStaticPaths() {
+  return projectData.projects.projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const { relatedCases, verification } = getProjectView(projectData, project);
+const provenance = getCatalogProvenance(projectData.catalogSource);
+const tags = [project.tags.agent && `Agent: ${project.tags.agent}`, project.tags.type && `Type: ${project.tags.type}`].filter(Boolean);
+const href = (pathname: string) => withBasePath(pathname, import.meta.env.BASE_URL);
+---
+
+<BaseLayout
+  title={`${project.name} · ${project.slug} | Jev 项目目录`}
+  description={project.summary}
+  canonicalPath={`/projects/${project.slug}`}
+>
+  <article class="project-detail">
+    <header class="project-detail__hero">
+      <div>
+        <a class="project-back" href={href("/projects")}>← 返回项目目录</a>
+        <p class="eyebrow">{project.category.title} / PROJECT RECORD</p>
+        <h1>{project.name}</h1>
+        <p class="project-detail__summary">{project.summary}</p>
+        <ul class="project-detail__tags" aria-label="项目标签">
+          <li>{project.category.title}</li>
+          {tags.map((tag) => <li>{tag}</li>)}
+        </ul>
+      </div>
+      <aside class="project-detail__source">
+        <p>CATALOG ENTRY</p>
+        <dl>
+          <div><dt>源文件</dt><dd>{project.source.file}:{project.source.line}</dd></div>
+          <div><dt>项目地址</dt><dd><a href={project.url} target="_blank" rel="noopener noreferrer nofollow">打开原项目 ↗</a></dd></div>
+        </dl>
+      </aside>
+    </header>
+
+    <section class="project-detail__section" aria-labelledby="verification-title">
+      <div class="projects-section-heading">
+        <p class="eyebrow">INDEPENDENT REVIEW</p>
+        <h2 id="verification-title">验证状态</h2>
+      </div>
+      {verification ? (
+        <VerificationRecord record={verification} />
+      ) : (
+        <div class="project-unreviewed" role="status" aria-label="验证状态：尚未审阅">
+          <strong>尚未审阅</strong>
+          <p>当前没有该项目的独立验证记录。目录收录不代表推荐、验证或生产适用性。</p>
+          <a href={href("/methodology")}>查看验证方法</a>
+        </div>
+      )}
+    </section>
+
+    <section class="project-detail__section" aria-labelledby="evidence-title">
+      <div class="projects-section-heading">
+        <p class="eyebrow">RELATED X EVIDENCE</p>
+        <h2 id="evidence-title">相关社区案例</h2>
+      </div>
+      {relatedCases.length > 0 ? (
+        <div class="related-case-grid">
+          {relatedCases.map((item) => (
+            <article class="related-case">
+              <div><span>{item.relation.type}</span><span>@{item.case.author.screenName}</span></div>
+              <h3>{item.case.author.name}</h3>
+              <p>{compactText(item.case.text, 180)}</p>
+              <nav aria-label={`${project.name} 相关案例链接`}>
+                <a href={href(`/case/${item.case.id}`)}>查看站内案例</a>
+                <a href={item.relation.evidenceUrl} target="_blank" rel="noopener noreferrer nofollow">查看 X 证据 ↗</a>
+              </nav>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <p class="project-detail__empty">尚未记录可核验的 X 社区关系。不会根据关键词自动推断关系。</p>
+      )}
+    </section>
+
+    <section class="project-provenance" aria-labelledby="provenance-title">
+      <div>
+        <p class="eyebrow">REPRODUCIBLE SOURCE</p>
+        <h2 id="provenance-title">目录来源与校验</h2>
+        <p>页面来自本地固定快照，不在构建或访问时读取上游仓库。</p>
+      </div>
+      <dl>
+        <div><dt>来源状态</dt><dd>{provenance.state}</dd></div>
+        <div><dt>来源仓库</dt><dd>{provenance.repository ?? "未发布"}</dd></div>
+        <div><dt>源提交</dt><dd><code>{provenance.revision ?? "不可用"}</code></dd></div>
+        <div><dt>SHA-256</dt><dd><code>{provenance.checksum ?? "不可用"}</code></dd></div>
+        {provenance.artifactUrl && <div><dt>目录原件</dt><dd><a href={provenance.artifactUrl} target="_blank" rel="noopener noreferrer nofollow">打开固定目录 ↗</a></dd></div>}
+      </dl>
+    </section>
+
+    <section class="project-assessment" aria-labelledby="assessment-title">
+      <p class="eyebrow">ONE DECISION / FIVE WORKDAYS</p>
+      <h2 id="assessment-title">这个项目是否适合你的 Agent 决策节点？</h2>
+      <p>固定范围评估会核对证据、边界、风险与实验方案，不承诺通用准确率或生产适用性。</p>
+      <a href={href("/services/agent-decision-assessment")}>查看 CNY 2,999 决策评估</a>
+    </section>
+  </article>
+</BaseLayout>

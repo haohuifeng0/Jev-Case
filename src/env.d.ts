@@ -2,6 +2,7 @@
 
 interface ImportMetaEnv {
   readonly PUBLIC_ASSESSMENT_FORM_URL?: string;
+  readonly PUBLIC_BASE_PATH?: string;
   readonly PUBLIC_SITE_URL?: string;
 }
 

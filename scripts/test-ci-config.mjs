@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const packageJson = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));
 const config = await readFile(path.join(root, "playwright.config.ts"), "utf8");
+const workflow = await readFile(path.join(root, ".github/workflows/ci.yml"), "utf8");
 const { default: playwrightConfig } = await import(path.join(root, "playwright.config.ts"));
 const requiredProjects = ["desktop", "mobile"];
 
@@ -47,6 +48,21 @@ assert.throws(
   ),
   /mobile must list at least one Playwright test/,
 );
+
+const buildStep = workflow.match(
+  /- name: Build Astro site\s+env:\s+PUBLIC_ASSESSMENT_FORM_URL:\s*["']?([^\s"']+)["']?\s+run: npm run build/,
+);
+assert.ok(buildStep, "CI build step must provide PUBLIC_ASSESSMENT_FORM_URL");
+const ciAssessmentUrl = new URL(buildStep[1]);
+assert.equal(ciAssessmentUrl.protocol, "https:");
+assert.equal(ciAssessmentUrl.hostname, "wenjuan.feishu.cn");
+assert.equal(ciAssessmentUrl.searchParams.get("assessment_fixture"), "ci");
+const ciBuild = spawnSync("npm", ["run", "build"], {
+  cwd: root,
+  encoding: "utf8",
+  env: { ...process.env, PUBLIC_ASSESSMENT_FORM_URL: ciAssessmentUrl.toString() },
+});
+assert.equal(ciBuild.status, 0, `${ciBuild.stdout}\n${ciBuild.stderr}`);
 
 const exactCommandPort = 4324;
 const exactCommandBlocker = createServer(() => {}).listen(exactCommandPort, "127.0.0.1");
@@ -98,7 +114,10 @@ try {
   managedServer.kill("SIGTERM");
 }
 
-console.log(JSON.stringify({ status: "PASS", checks: ["playwright-web-server", "chrome-channel", "occupied-port"] }));
+console.log(JSON.stringify({
+  status: "PASS",
+  checks: ["ci-build-env", "playwright-web-server", "chrome-channel", "occupied-port"],
+}));
 
 function validatePlaywrightTestList(output) {
   const summary = output.match(/^Total:\s+(\d+)\s+tests?\s+in\s+(\d+)\s+files?$/m);

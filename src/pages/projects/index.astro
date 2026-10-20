@@ -1,0 +1,75 @@
+---
+import ProjectCard from "../../components/projects/ProjectCard.astro";
+import ProjectFilters from "../../components/projects/ProjectFilters.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { projectData } from "../../lib/project-data";
+import { getDiscoveryOptions } from "../../lib/project-query";
+import { canonicalUrl } from "../../lib/metadata";
+import "../../styles/project-list.css";
+
+const projects = projectData.projects.projects;
+const options = getDiscoveryOptions(projects);
+const verificationByProject = new Map(
+  projectData.verifications.verifications.map((record) => [record.projectId, record.status]),
+);
+const statusLabels = {
+  verified: "已验证",
+  limited: "有限验证",
+  unverified: "未验证",
+} as const;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Jev 项目目录",
+  numberOfItems: projects.length,
+  itemListElement: projects.map((project, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: project.name,
+    url: canonicalUrl(`/projects/${project.slug}`, Astro.site?.toString() ?? import.meta.env.PUBLIC_SITE_URL ?? "http://localhost:4321", import.meta.env.BASE_URL),
+  })),
+};
+---
+
+<BaseLayout
+  title="Jev 项目目录 | JEV Signal"
+  description="按分类、Agent 和项目类型浏览 624 个 Jev 生态项目，并查看来源、X 社区证据与独立验证状态。"
+  canonicalPath="/projects"
+  structuredData={[structuredData]}
+>
+  <div class="projects-page">
+    <header class="projects-hero">
+      <div>
+        <p class="eyebrow">CATALOG / SOURCE-PINNED / NO RANKING</p>
+        <h1>Jev 项目目录</h1>
+      </div>
+      <div class="projects-hero__brief">
+        <p>从可复现目录快照发现项目。收录不等于背书；验证状态只来自单独的证据记录。</p>
+        <dl>
+          <div><dt>项目</dt><dd>{projects.length}</dd></div>
+          <div><dt>分类</dt><dd>{options.categories.length}</dd></div>
+        </dl>
+      </div>
+    </header>
+
+    <section class="projects-discovery" aria-labelledby="discovery-title">
+      <div class="projects-section-heading">
+        <p class="eyebrow">DISCOVERY CONTROLS</p>
+        <h2 id="discovery-title">按决策环境缩小范围</h2>
+      </div>
+      <ProjectFilters options={options} total={projects.length} />
+    </section>
+
+    <section class="project-grid" aria-label="项目列表">
+      {projects.map((project) => {
+        const status = verificationByProject.get(project.id);
+        return (
+          <ProjectCard
+            project={project}
+            verificationLabel={status === undefined ? "尚未审阅" : statusLabels[status]}
+          />
+        );
+      })}
+    </section>
+  </div>
+</BaseLayout>

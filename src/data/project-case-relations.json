@@ -1,4 +1,17 @@
 {
   "schemaVersion": 1,
-  "relations": []
+  "relations": [
+    {
+      "projectId": "https://github.com/romanslack/jev-drone",
+      "caseId": "2100335978229690683",
+      "type": "demo",
+      "evidenceUrl": "https://x.com/RomanSlack1/status/2100335978229690683"
+    },
+    {
+      "projectId": "https://github.com/tamaratran/fast-jev-compaction",
+      "caseId": "2100913118528393596",
+      "type": "demo",
+      "evidenceUrl": "https://x.com/0x_kaize/status/2100913118528393596"
+    }
+  ]
 }

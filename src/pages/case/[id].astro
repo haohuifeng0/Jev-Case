@@ -2,6 +2,7 @@
 import CaseDetail from "../../components/react/CaseDetail";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCaseAliases, getCases, posterUrl } from "../../lib/cases";
+import { canonicalUrl } from "../../lib/metadata";
 import type { CaseItem } from "../../lib/types";
 
 export function getStaticPaths() {
@@ -23,7 +24,8 @@ type Props =
 
 const { item, redirectTo } = Astro.props;
 if (redirectTo) {
-  return Astro.redirect(`/case/${redirectTo}`, 301);
+  const siteURL = Astro.site?.toString() ?? import.meta.env.PUBLIC_SITE_URL ?? "http://localhost:4321";
+  return Astro.redirect(canonicalUrl(`/case/${redirectTo}`, siteURL, import.meta.env.BASE_URL), 301);
 }
 if (!item) {
   throw new Error("Case page has neither an item nor a redirect target");
@@ -36,7 +38,8 @@ const structuredData = {
   headline: `${item.author.name} 的 JEV 案例`,
   datePublished: item.createdAt,
   articleBody: item.text,
-  url: item.canonicalUrl,
+  url: canonicalUrl(`/case/${item.id}`, Astro.site?.toString() ?? import.meta.env.PUBLIC_SITE_URL ?? "http://localhost:4321", import.meta.env.BASE_URL),
+  sameAs: item.canonicalUrl,
   image: poster,
   author: {
     "@type": "Person",
@@ -59,17 +62,12 @@ const structuredData = {
 ---
 
 <BaseLayout
-  title={`${item.author.name} · JEV 案例`}
+  title={`${item.author.name} · ${item.id} | JEV 案例`}
   description={item.text.slice(0, 180)}
   image={poster}
   canonicalPath={`/case/${item.id}`}
   article
+  structuredData={[structuredData]}
 >
-  <script
-    slot="head"
-    type="application/ld+json"
-    set:html={JSON.stringify(structuredData)}
-  />
-
   <CaseDetail item={item} client:load />
 </BaseLayout>

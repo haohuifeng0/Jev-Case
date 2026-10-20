@@ -10,6 +10,12 @@ import test from "node:test";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const validator = path.join(root, "scripts/validate-data.mjs");
+const revision = "0123456789abcdef0123456789abcdef01234567";
+const immutableEvidence = (label) => ({
+  label,
+  revision,
+  url: `https://github.com/example/project/blob/${revision}/verification.txt`,
+});
 
 const caseItem = {
   id: "case-1",
@@ -65,9 +71,17 @@ const validDatasets = () => ({
     schemaVersion: 1,
     verifications: [{
       projectId: "https://github.com/example/project",
-      status: "limited",
+      status: "verified",
       reviewedAt: "2026-01-02",
-      evidenceUrls: ["https://github.com/example/project/commit/abc"],
+      checks: {
+        directJevCall: { outcome: "pass", evidence: [immutableEvidence("Direct Jev call")] },
+        runnableCheck: { outcome: "pass", evidence: [immutableEvidence("Runnable check")] },
+        publicDemo: { outcome: "not-found", evidence: [] },
+        license: { result: "found", evidence: [immutableEvidence("License")] },
+        documentationDepth: { result: "substantial", evidence: [immutableEvidence("Documentation")] },
+        maintenanceSignal: { result: "active", evidence: [immutableEvidence("Maintenance")] },
+      },
+      reviewerNotes: "Fixture review notes.",
     }],
   },
   "scenarios.json": {
@@ -156,11 +170,52 @@ test("rejects unsupported verification statuses", async () => {
   expectFailure(result, /verifications\.json: verifications\.0\.status/);
 });
 
+test("rejects verified status without direct-call and runnable evidence", async () => {
+  const result = await runFixture((datasets) => {
+    datasets["verifications.json"].verifications[0].checks.directJevCall = {
+      outcome: "not-found",
+      evidence: [],
+    };
+  });
+  expectFailure(result, /verifications\.json: verifications\.0\.status: must be unverified/);
+});
+
+test("rejects a declared status that conflicts with derived evidence", async () => {
+  const result = await runFixture((datasets) => {
+    datasets["verifications.json"].verifications[0].status = "limited";
+  });
+  expectFailure(result, /verifications\.json: verifications\.0\.status: must be verified/);
+});
+
+test("rejects mutable HTTP verification evidence", async () => {
+  const result = await runFixture((datasets) => {
+    datasets["verifications.json"].verifications[0].checks.directJevCall.evidence[0].url =
+      `http://github.com/example/project/blob/${revision}/verification.txt`;
+  });
+  expectFailure(result, /verifications\.json: verifications\.0\.checks\.directJevCall\.evidence\.0\.url/);
+});
+
+test("rejects HTTPS evidence that is not bound to its revision", async () => {
+  const result = await runFixture((datasets) => {
+    datasets["verifications.json"].verifications[0].checks.directJevCall.evidence[0].url =
+      "https://github.com/example/project/blob/main/verification.txt";
+  });
+  expectFailure(result, /must use an immutable GitHub blob, tree, commit, or raw URL matching revision/);
+});
+
 test("rejects invalid ISO review dates", async () => {
   const result = await runFixture((datasets) => {
     datasets["verifications.json"].verifications[0].reviewedAt = "02\/01\/2026";
   });
   expectFailure(result, /verifications\.json: verifications\.0\.reviewedAt/);
+});
+
+test("accepts a stale record without rewriting its dated status", async () => {
+  const result = await runFixture((datasets) => {
+    datasets["verifications.json"].verifications[0].reviewedAt = "2025-01-01";
+  });
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /"status":"PASS"/);
 });
 
 test("rejects malformed JSON without printing success", async () => {

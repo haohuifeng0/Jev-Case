@@ -1,0 +1,66 @@
+---
+import type { VerificationRecord } from "../../lib/verification-schema";
+import { getReviewFreshness, type VerificationStatus } from "../../lib/verification-rules";
+
+interface Props {
+  record: VerificationRecord;
+  illustrative?: boolean;
+  today?: Date;
+}
+
+const { record, illustrative = false, today = new Date() } = Astro.props;
+const freshness = getReviewFreshness(record.reviewedAt, today);
+const statusCopy = {
+  verified: { label: "已验证", summary: "有直接 Jev 调用证据，并通过可运行检查或公开演示。" },
+  limited: { label: "有限验证", summary: "有直接调用证据，但没有通过可运行检查或公开演示。" },
+  unverified: { label: "未验证", summary: "直接证据不足、不可访问、矛盾，或检查失败。" },
+} satisfies Record<VerificationStatus, { readonly label: string; readonly summary: string }>;
+const checkRows = [
+  ["直接 Jev 调用", record.checks.directJevCall.outcome],
+  ["可运行检查", record.checks.runnableCheck.outcome],
+  ["公开演示", record.checks.publicDemo.outcome],
+  ["许可证", record.checks.license.result],
+  ["文档深度", record.checks.documentationDepth.result],
+  ["维护信号", record.checks.maintenanceSignal.result],
+] as const;
+const evidence = Object.values(record.checks).flatMap((check) => check.evidence);
+const copy = statusCopy[record.status];
+---
+
+<article class:list={["verification-record", `verification-record--${record.status}`]}>
+  <header class="verification-record__header">
+    <div>
+      {illustrative && <p class="verification-record__example">规则示例，不代表项目结论</p>}
+      <p
+        class="verification-record__badge"
+        role="status"
+        aria-label={`验证状态：${copy.label}`}
+      >
+        {copy.label}
+      </p>
+    </div>
+    <div class="verification-record__date">
+      <span>复核日期</span>
+      <time datetime={record.reviewedAt}>{record.reviewedAt}</time>
+      {freshness.state === "needs-recheck" && <strong>需要复查</strong>}
+    </div>
+  </header>
+  <p class="verification-record__summary">{copy.summary}</p>
+  <dl class="verification-record__checks">
+    {checkRows.map(([label, result]) => <div><dt>{label}</dt><dd>{result}</dd></div>)}
+  </dl>
+  <div class="verification-record__notes">
+    <h3>审阅备注</h3>
+    <p>{record.reviewerNotes}</p>
+  </div>
+  {evidence.length > 0 && (
+    <div class="verification-record__evidence">
+      <h3>不可变证据</h3>
+      <ul>
+        {evidence.map((item) => (
+          <li><a href={item.url} target="_blank" rel="noopener noreferrer nofollow">{item.label}</a></li>
+        ))}
+      </ul>
+    </div>
+  )}
+</article>

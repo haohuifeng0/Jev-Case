@@ -1,0 +1,243 @@
+.scenario-page {
+  background: var(--ink);
+}
+
+.scenario-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 16px 28px;
+  border-bottom: 1px solid var(--line);
+  background: var(--ink-soft);
+}
+
+.scenario-tabs a {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-decoration: none;
+}
+
+.scenario-tabs a[aria-current="page"] {
+  border-color: var(--acid);
+  background: var(--acid);
+  color: var(--ink);
+}
+
+.scenario-page a:focus-visible {
+  outline: 2px solid var(--acid);
+  outline-offset: 4px;
+}
+
+.scenario-hero,
+.scenario-section {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.65fr) minmax(0, 1.35fr);
+  gap: 40px;
+  padding: 56px 28px;
+  border-bottom: 1px solid var(--line);
+}
+
+.scenario-hero {
+  align-items: end;
+  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+  min-height: 480px;
+}
+
+.scenario-hero h1 {
+  max-width: 920px;
+  margin: 0;
+  font-size: clamp(2.8rem, 7vw, 7rem);
+  line-height: 0.94;
+  text-wrap: balance;
+}
+
+.scenario-hero h1 [data-title-segment] {
+  display: inline-block;
+}
+
+.scenario-hero > p,
+.scenario-decision > p {
+  margin: 0;
+  color: var(--paper-dim);
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.scenario-section h2,
+.scenario-cta h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 3.4rem);
+  line-height: 1.05;
+}
+
+.scenario-pair,
+.scenario-control-grid,
+.scenario-project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.scenario-pair > div,
+.scenario-control-grid > div,
+.scenario-project,
+.question-shape > div,
+.scenario-caveat,
+.scenario-empty {
+  padding: 24px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.scenario-pair h3,
+.scenario-control-grid h3,
+.scenario-project h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.scenario-pair ul,
+.scenario-control-grid ul,
+.question-shape ul {
+  margin-bottom: 0;
+  padding-left: 20px;
+}
+
+.scenario-pair li,
+.scenario-control-grid li,
+.question-shape li,
+.scenario-control-grid p,
+.scenario-project p,
+.scenario-empty,
+.scenario-caveat p {
+  color: var(--paper-dim);
+  line-height: 1.65;
+}
+
+.question-shape {
+  margin: 0;
+}
+
+.question-shape > div + div {
+  border-top: 0;
+}
+
+.question-shape dt,
+.scenario-project__meta {
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.question-shape dd {
+  margin: 12px 0 0;
+  line-height: 1.65;
+}
+
+.scenario-control-grid > div:last-child {
+  grid-column: 1 / -1;
+}
+
+.scenario-project-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.scenario-project {
+  min-width: 0;
+}
+
+.scenario-project__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.scenario-project h3 {
+  margin-top: 24px;
+  overflow-wrap: anywhere;
+}
+
+.scenario-project__link {
+  display: inline-block;
+  margin-top: 16px;
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
+.scenario-caveat,
+.scenario-empty {
+  margin-top: 20px;
+  border-color: var(--coral);
+}
+
+.scenario-caveat strong {
+  color: var(--coral);
+  font-family: var(--font-mono);
+}
+
+.scenario-case-list {
+  margin: 0;
+  padding-left: 20px;
+  line-height: 1.65;
+}
+
+.scenario-cta {
+  padding: 56px 28px;
+  background: var(--acid);
+  color: var(--ink);
+}
+
+.scenario-cta .eyebrow,
+.scenario-cta > p {
+  max-width: 760px;
+  color: var(--ink);
+  line-height: 1.65;
+}
+
+.scenario-cta > a {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 16px 20px;
+  border: 1px solid var(--ink);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+@media (max-width: 1180px) {
+  .scenario-project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 840px) {
+  .scenario-hero,
+  .scenario-section {
+    grid-template-columns: 1fr;
+  }
+
+  .scenario-hero {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 620px) {
+  .scenario-tabs,
+  .scenario-hero,
+  .scenario-section,
+  .scenario-cta {
+    padding-inline: 20px;
+  }
+
+  .scenario-pair,
+  .scenario-control-grid,
+  .scenario-project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .scenario-control-grid > div:last-child {
+    grid-column: auto;
+  }
+}

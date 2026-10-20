@@ -1,0 +1,40 @@
+---
+import type { Project } from "../../lib/project-query";
+import { withBasePath } from "../../lib/metadata";
+
+interface Props {
+  project: Project;
+  verificationLabel: string;
+}
+
+const { project, verificationLabel } = Astro.props;
+const searchText = [
+  project.name,
+  project.summary,
+  project.category.title,
+  project.tags.agent,
+  project.tags.type,
+].filter(Boolean).join(" ").toLocaleLowerCase();
+const projectHref = withBasePath(`/projects/${project.slug}`, import.meta.env.BASE_URL);
+---
+
+<article
+  class="project-card"
+  data-project-card
+  data-category={project.category.key}
+  data-agent={project.tags.agent ?? ""}
+  data-type={project.tags.type ?? ""}
+  data-search={searchText}
+>
+  <div class="project-card__meta">
+    <span>{project.category.title}</span>
+    <span>{verificationLabel}</span>
+  </div>
+  <h2><a href={projectHref}>{project.name}</a></h2>
+  <p>{project.summary}</p>
+  <ul class="project-card__tags" aria-label="项目标签">
+    {project.tags.agent && <li>Agent: {project.tags.agent}</li>}
+    {project.tags.type && <li>Type: {project.tags.type}</li>}
+  </ul>
+  <a class="project-card__action" href={projectHref}>查看证据与来源</a>
+</article>

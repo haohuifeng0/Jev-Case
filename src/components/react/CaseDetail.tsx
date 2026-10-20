@@ -1,10 +1,8 @@
-import {
-  formatDate,
-  formatMetric,
-  mediaUrl,
-  posterUrl,
-} from "../../lib/cases";
+import { formatDate, formatMetric } from "../../lib/cases";
 import type { CaseItem, CaseTranslation } from "../../lib/types";
+import { withBasePath } from "../../lib/metadata";
+import { useEffect, useRef, useState } from "react";
+import CaseMediaPanel from "./CaseMediaPanel";
 
 interface CaseDetailProps {
   item: CaseItem;
@@ -31,14 +29,23 @@ function TranslationBlock({
 }
 
 export default function CaseDetail({ item }: CaseDetailProps) {
-  const primary = item.media[0];
-  const poster = posterUrl(primary);
-  const cover = poster || "/poster-placeholder.svg";
+  const [avatarAvailable, setAvatarAvailable] = useState(Boolean(item.author.avatarUrl));
+  const avatarRef = useRef<HTMLImageElement>(null);
+  const basePath = import.meta.env.BASE_URL;
+
+  useEffect(() => {
+    const avatar = avatarRef.current;
+    if (!avatar) return;
+    const markUnavailable = () => setAvatarAvailable(false);
+    avatar.addEventListener("error", markUnavailable);
+    if (avatar.complete && avatar.naturalWidth === 0) markUnavailable();
+    return () => avatar.removeEventListener("error", markUnavailable);
+  }, []);
 
   return (
     <article className="case-detail">
       <header className="detail-head">
-        <a className="back-link" href="/">
+        <a className="back-link" href={withBasePath("/", basePath)}>
           ← 返回案例流
         </a>
         <div className="detail-coordinates">
@@ -49,40 +56,14 @@ export default function CaseDetail({ item }: CaseDetailProps) {
       </header>
 
       <div className="detail-grid">
-        <section className="detail-media-panel" aria-label="案例媒体">
-          {primary?.publicUrl ? (
-            <video
-              className="detail-video"
-              poster={cover}
-              controls
-              playsInline
-              preload="metadata"
-            >
-              <source src={mediaUrl(primary)} type="video/mp4" />
-            </video>
-          ) : (
-            <div className="detail-unavailable">
-              <img src={cover} alt="" />
-              <span>视频待更新</span>
-            </div>
-          )}
-          <div className="media-ledger">
-            <span>MEDIA / {item.media.length} ITEMS</span>
-          </div>
-          {item.media.slice(1).map((media) => (
-            <div className="secondary-media" key={media.id}>
-              <span>
-                {media.type.toUpperCase()} / {media.status.toUpperCase()}
-              </span>
-              {media.publicUrl && <a href={mediaUrl(media)}>打开文件</a>}
-            </div>
-          ))}
-        </section>
+        <CaseMediaPanel item={item} />
 
         <div className="detail-copy">
           <div className="detail-author">
             <span className="author-avatar large">
-              {item.author.avatarUrl ? <img src={item.author.avatarUrl} alt="" /> : null}
+              {item.author.avatarUrl && avatarAvailable ? (
+                <img ref={avatarRef} src={item.author.avatarUrl} alt="" onError={() => setAvatarAvailable(false)} />
+              ) : null}
             </span>
             <span>
               <strong>{item.author.name}</strong>

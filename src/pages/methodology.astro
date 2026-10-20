@@ -1,0 +1,112 @@
+---
+import VerificationRecord from "../components/verification/VerificationRecord.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { VerificationRecordSchema } from "../lib/verification-schema";
+import "../styles/methodology.css";
+
+const revision = "0123456789abcdef0123456789abcdef01234567";
+const evidence = (label: string) => ({
+  label,
+  revision,
+  url: `https://github.com/example/project/blob/${revision}/verification.txt`,
+});
+const supportingChecks = {
+  license: { result: "found", evidence: [evidence("许可证文件（示例）")] },
+  documentationDepth: { result: "substantial", evidence: [evidence("使用文档（示例）")] },
+  maintenanceSignal: { result: "active", evidence: [evidence("维护记录（示例）")] },
+} as const;
+const examples = [
+  VerificationRecordSchema.parse({
+    projectId: "https://github.com/example/verified",
+    status: "verified",
+    reviewedAt: "2026-10-01",
+    checks: {
+      directJevCall: { outcome: "pass", evidence: [evidence("直接调用源码（示例）")] },
+      runnableCheck: { outcome: "pass", evidence: [evidence("可运行检查（示例）")] },
+      publicDemo: { outcome: "not-found", evidence: [] },
+      ...supportingChecks,
+    },
+    reviewerNotes: "示例仅说明规则；结论仍受日期、版本和公开证据范围限制。",
+  }),
+  VerificationRecordSchema.parse({
+    projectId: "https://github.com/example/limited",
+    status: "limited",
+    reviewedAt: "2026-01-01",
+    checks: {
+      directJevCall: { outcome: "pass", evidence: [evidence("直接调用源码（示例）")] },
+      runnableCheck: { outcome: "not-found", evidence: [] },
+      publicDemo: { outcome: "not-found", evidence: [] },
+      ...supportingChecks,
+    },
+    reviewerNotes: "直接关系可确认，但缺少可重复的运行结果；超过 90 天后必须复查。",
+  }),
+  VerificationRecordSchema.parse({
+    projectId: "https://github.com/example/unverified",
+    status: "unverified",
+    reviewedAt: "2026-10-01",
+    checks: {
+      directJevCall: { outcome: "not-found", evidence: [] },
+      runnableCheck: { outcome: "not-found", evidence: [] },
+      publicDemo: { outcome: "not-found", evidence: [] },
+      license: { result: "unclear", evidence: [] },
+      documentationDepth: { result: "basic", evidence: [] },
+      maintenanceSignal: { result: "unknown", evidence: [] },
+    },
+    reviewerNotes: "未找到足够的直接证据。审阅备注与证据标签始终按纯文本处理，不能改变状态规则。",
+  }),
+] as const;
+---
+
+<BaseLayout
+  title="项目验证方法 | Jev Signal"
+  description="Jev Signal 的项目证据要求、三态验证规则、90 天复查机制，以及更正、移除和赞助分离政策。"
+  canonicalPath="/methodology"
+>
+  <div class="methodology-page">
+    <section class="methodology-hero" aria-labelledby="methodology-title">
+      <div>
+        <p class="methodology-kicker">PUBLIC RUBRIC / DATED EVIDENCE</p>
+        <h1 id="methodology-title">项目验证方法</h1>
+      </div>
+      <p class="methodology-hero__brief">
+        我们记录可追溯证据，不给项目打综合分。收录不等于背书、认证、排名或服务推荐；状态只描述复核日期当时可公开验证的范围。
+      </p>
+    </section>
+
+    <section class="methodology-section" aria-labelledby="states-title">
+      <p class="methodology-kicker">THREE STATES / DERIVED, NOT CLAIMED</p>
+      <h2 id="states-title">状态由证据字段推导</h2>
+      <div class="verification-grid">
+        {examples.map((record) => <VerificationRecord record={record} illustrative />)}
+      </div>
+    </section>
+
+    <section class="methodology-section" aria-labelledby="policy-title">
+      <p class="methodology-kicker">POLICY / CORRECTION / SEPARATION</p>
+      <h2 id="policy-title">证据规则与纠错边界</h2>
+      <div class="methodology-policy">
+        <article>
+          <h3>证据与期限</h3>
+          <ul>
+            <li>直接 Jev 调用必须使用 GitHub blob、tree、commit 或 raw 路径绑定 40 位提交修订；不接受查询参数或片段代替路径。</li>
+            <li>已验证还需要通过可运行检查，或存在可核验的公开演示。</li>
+            <li>许可证、文档深度、维护信号和审阅备注分别记录，不合并为分数。</li>
+            <li>复核超过 90 天显示“需要复查”，旧状态不自动升级。</li>
+          </ul>
+        </article>
+        <article>
+          <h3>更正或移除</h3>
+          <p>
+            项目维护者或权利人可通过仓库公开联系渠道提交不可变证据链接、具体错误位置和期望更正。我们保留审阅轨迹；证据失效、归属错误或权利要求成立时，可降级、更正或移除记录。
+          </p>
+        </article>
+        <article>
+          <h3>赞助分离</h3>
+          <p>
+            付款或赞助不改变验证状态、证据门槛、目录顺序或编辑结论。赞助内容必须单独披露，不能购买“已验证”结果。
+          </p>
+        </article>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "node scripts/start-preview.mjs",
     "check": "astro check",
     "catalog:import": "node --experimental-strip-types scripts/import-awesome-jev.mjs",
     "catalog:check": "node --experimental-strip-types scripts/import-awesome-jev.mjs --check",
@@ -14,8 +14,12 @@
     "validate:business": "node scripts/validate-business.mjs",
     "validate:data": "node --experimental-strip-types scripts/validate-data.mjs",
     "test:catalog": "node --test scripts/test-import-awesome-jev.mjs scripts/test-catalog-transaction.mjs scripts/test-catalog-provenance.mjs scripts/test-catalog-download.mjs scripts/test-catalog-source-config.mjs",
-    "test:data": "node --test scripts/test-validate-data.mjs",
+    "test:data": "node --experimental-strip-types --test scripts/test-validate-data.mjs scripts/test-project-case-relations.mjs scripts/test-project-pages.mjs scripts/test-verification-rules.mjs scripts/test-scenarios.mjs",
+    "report:relations": "node --experimental-strip-types scripts/report-project-case-relations.mjs",
     "test:assessment": "node --experimental-strip-types --test scripts/test-assessment-form.mjs",
+    "test:metadata": "node --experimental-strip-types --test scripts/test-metadata-security.mjs scripts/test-built-site.mjs",
+    "validate:operations": "node scripts/validate-operations.mjs --check",
+    "test:operations": "node --test scripts/test-operations-content-safety.mjs && node scripts/test-operations.mjs",
     "test:ci-config": "node scripts/test-ci-config-regression.mjs && node scripts/test-ci-order.mjs",
     "test:smoke": "node scripts/run-smoke.mjs"
   },

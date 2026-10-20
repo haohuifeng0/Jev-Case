@@ -5,6 +5,7 @@ import {
   posterUrl,
 } from "../../lib/cases";
 import type { CaseItem } from "../../lib/types";
+import { withBasePath } from "../../lib/metadata";
 
 interface CaseCardProps {
   item: CaseItem;
@@ -24,11 +25,12 @@ export default function CaseCard({
   const poster = posterUrl(video ?? item.media[0]);
   const src = mediaUrl(video);
   const cover = poster || "/poster-placeholder.svg";
+  const basePath = import.meta.env.BASE_URL;
 
   return (
     <a
       className="case-card"
-      href={`/case/${item.id}`}
+      href={withBasePath(`/case/${item.id}`, basePath)}
       data-case-card
       data-language={item.lang}
       data-video={video ? "true" : "false"}
@@ -42,7 +44,7 @@ export default function CaseCard({
         <span className="case-signal">{item.lang || "??"}</span>
         {src ? (
           <video
-            poster={cover}
+            poster={withBasePath(cover, basePath)}
             preload="none"
             muted
             playsInline
@@ -58,7 +60,7 @@ export default function CaseCard({
             loading="lazy"
             decoding="async"
             onError={(event) => {
-              event.currentTarget.src = "/poster-placeholder.svg";
+              event.currentTarget.src = withBasePath("/poster-placeholder.svg", basePath);
             }}
           />
         )}

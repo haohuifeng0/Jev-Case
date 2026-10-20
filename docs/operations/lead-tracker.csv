@@ -1,0 +1,4 @@
+account_ref,scenario,research_status,qualification_status,owner_status,timing_status,input_access_status,authority_budget_status,outreach_week,outbound_attempts,assessment_call_status,paid_assessment_status,paid_poc_status,next_action,notes_redacted
+SYN-001,model-routing,researched,qualified,yes,yes,yes,yes,7,1,scheduled,no,no,run-discovery,synthetic-example-only
+SYN-002,risk-gates,researched,nurture,yes,unknown,yes,unknown,8,1,not-scheduled,no,no,request-missing-evidence,synthetic-example-only
+SYN-003,output-verification,queued,declined,no,unknown,unknown,no,0,0,not-scheduled,no,no,close,synthetic-example-only

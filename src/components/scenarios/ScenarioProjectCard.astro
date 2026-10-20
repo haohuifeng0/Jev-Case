@@ -1,0 +1,29 @@
+---
+import type { ScenarioProject } from "../../lib/scenario-query";
+import { withBasePath } from "../../lib/metadata";
+
+interface Props {
+  item: ScenarioProject;
+}
+
+const { item } = Astro.props;
+const status = item.verification?.status ?? "unreviewed";
+const statusLabel = item.verification === undefined
+  ? "尚未审阅"
+  : item.verification.status === "verified"
+    ? "已验证"
+    : item.verification.status === "limited"
+      ? "有限验证"
+      : "未验证";
+const projectHref = withBasePath(`/projects/${item.project.slug}`, import.meta.env.BASE_URL);
+---
+
+<article class="scenario-project" data-scenario-project data-status={status}>
+  <div class="scenario-project__meta">
+    <span>{item.project.category.title}</span>
+    <span>{statusLabel}</span>
+  </div>
+  <h3><a href={projectHref}>{item.project.name}</a></h3>
+  <p>{item.project.summary}</p>
+  <a class="scenario-project__link" href={projectHref}>查看项目证据与来源</a>
+</article>

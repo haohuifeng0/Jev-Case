@@ -8,6 +8,8 @@ const host = process.env.SMOKE_HOST ?? "127.0.0.1";
 const port = Number(process.env.SMOKE_PORT ?? "4321");
 const smokeEnvironment = {
   ...process.env,
+  PUBLIC_BASE_PATH: "/",
+  PUBLIC_SITE_URL: `http://${host}:${port}`,
   PUBLIC_ASSESSMENT_FORM_URL:
     process.env.PUBLIC_ASSESSMENT_FORM_URL
     ?? "https://wenjuan.feishu.cn/m/cfm?assessment_fixture=smoke",
@@ -44,9 +46,7 @@ if (await portIsOccupied()) {
     const preview = spawn(
       process.execPath,
       [
-        path.join("node_modules", "astro", "bin", "astro.mjs"),
-        "preview",
-        "--ignore-lock",
+        path.join("scripts", "start-preview.mjs"),
         "--host",
         host,
         "--port",

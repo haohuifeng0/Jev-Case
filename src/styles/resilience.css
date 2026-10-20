@@ -1,0 +1,32 @@
+.header-nav {
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+
+.detail-unavailable span {
+  max-width: 18ch;
+  text-align: center;
+  text-wrap: balance;
+}
+
+@media (max-width: 840px) {
+  .site-header {
+    position: static;
+  }
+
+  .header-nav {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 620px) {
+  .header-nav {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 8px;
+  }
+
+  .header-nav a {
+    flex: 0 0 auto;
+  }
+}

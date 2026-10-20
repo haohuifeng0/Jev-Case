@@ -8,5 +8,8 @@ export type {
   ProjectCaseRelations,
   ProjectCatalog,
   Scenarios,
+  VerificationEvidence,
+  VerificationRecord,
   Verifications,
 } from "./data-schemas";
+export type { ReviewFreshness, VerificationStatus } from "./verification-rules";

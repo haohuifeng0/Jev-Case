@@ -12,6 +12,7 @@ const assessmentFormUrl = getAssessmentFormUrl(
   import.meta.env.PROD,
 );
 const { assessment, poc } = business.services;
+const serviceDescription = "用五个工作日评估一个边界清晰的 AI Agent 决策节点，获得风险、证据缺口、实验方案与明确的停止或继续建议。";
 const faq = [
   {
     question: "评估会直接交付生产系统吗？",
@@ -30,12 +31,26 @@ const faq = [
     answer: business.claimPolicy.rule,
   },
 ] as const;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: assessment.name,
+  description: serviceDescription,
+  provider: { "@type": "Organization", name: "JEV Signal" },
+  offers: {
+    "@type": "Offer",
+    price: assessment.price.amount,
+    priceCurrency: assessment.price.currency,
+    description: assessment.timeline.label,
+  },
+};
 ---
 
 <BaseLayout
   title="AI Agent 决策评估 | Jev Signal"
-  description="用五个工作日评估一个边界清晰的 AI Agent 决策节点，获得风险、证据缺口、实验方案与明确的停止或继续建议。"
+  description={serviceDescription}
   canonicalPath="/services/agent-decision-assessment"
+  structuredData={[structuredData]}
 >
   <div class="assessment-page">
     <section class="assessment-hero" aria-labelledby="assessment-title">

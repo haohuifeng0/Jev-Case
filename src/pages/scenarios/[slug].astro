@@ -1,0 +1,103 @@
+---
+import { getCollection } from "astro:content";
+import ScenarioProjectCard from "../../components/scenarios/ScenarioProjectCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { projectData } from "../../lib/project-data";
+import { resolveScenarioViews, type ScenarioView } from "../../lib/scenario-query";
+import { withBasePath } from "../../lib/metadata";
+import "../../styles/scenario-detail.css";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("scenarios");
+  return resolveScenarioViews(entries, projectData).map((view) => ({
+    params: { slug: view.entry.data.slug },
+    props: { view },
+  }));
+}
+
+interface Props {
+  view: ScenarioView;
+}
+
+const { view } = Astro.props;
+const { data } = view.entry;
+const scenarioLinks = [
+  ["model-routing", "模型路由"],
+  ["tool-skill-selection", "工具与技能"],
+  ["risk-gates", "风险闸门"],
+  ["output-verification", "输出验证"],
+] as const;
+const href = (pathname: string) => withBasePath(pathname, import.meta.env.BASE_URL);
+---
+
+<BaseLayout title={`${data.title} | Jev Agent 决策场景`} description={data.description} canonicalPath={`/scenarios/${data.slug}`}>
+  <article class="scenario-page">
+    <nav class="scenario-tabs" aria-label="AI Agent 决策场景">
+      {scenarioLinks.map(([slug, label]) => (
+        <a href={href(`/scenarios/${slug}`)} aria-current={slug === data.slug ? "page" : undefined}>{label}</a>
+      ))}
+    </nav>
+
+    <header class="scenario-hero">
+      <div>
+        <p class="eyebrow">{data.eyebrow} / DECISION GUIDE</p>
+        <h1>{data.titleSegments.map((segment) => <span data-title-segment>{segment}</span>)}</h1>
+      </div>
+      <p>{data.description}</p>
+    </header>
+
+    <section class="scenario-section scenario-decision" aria-labelledby="decision-title">
+      <div><p class="eyebrow">DECISION</p><h2 id="decision-title">这个决策是什么</h2></div>
+      <p>{data.decision}</p>
+    </section>
+
+    <section class="scenario-section" aria-labelledby="fit-title">
+      <div><p class="eyebrow">BOUNDARIES</p><h2 id="fit-title">适合与不适合</h2></div>
+      <div class="scenario-pair">
+        <div><h3>Jev 适合介入</h3><ul>{data.fit.map((item) => <li>{item}</li>)}</ul></div>
+        <div><h3>不适合使用 Jev</h3><ul>{data.notFit.map((item) => <li>{item}</li>)}</ul></div>
+      </div>
+    </section>
+
+    <section class="scenario-section" aria-labelledby="shape-title">
+      <div><p class="eyebrow">TYPED QUESTION</p><h2 id="shape-title">Jev 类型化问题形状</h2></div>
+      <dl class="question-shape">
+        <div><dt>上下文</dt><dd>{data.questionShape.context}</dd></div>
+        <div><dt>候选项</dt><dd><ul>{data.questionShape.options.map((item) => <li>{item}</li>)}</ul></dd></div>
+        <div><dt>判定标准</dt><dd><ul>{data.questionShape.criteria.map((item) => <li>{item}</li>)}</ul></dd></div>
+        <div><dt>输出</dt><dd>{data.questionShape.output}</dd></div>
+      </dl>
+    </section>
+
+    <section class="scenario-section" aria-labelledby="controls-title">
+      <div><p class="eyebrow">CONFIDENCE / CONTROL</p><h2 id="controls-title">置信度、升级与确定性控制</h2></div>
+      <div class="scenario-control-grid">
+        <div><h3>如何解释置信度</h3><p>{data.confidence.interpretation}</p></div>
+        <div><h3>何时升级人工</h3><p>{data.confidence.escalation}</p></div>
+        <div><h3>确定性控制</h3><ul>{data.controls.map((item) => <li>{item}</li>)}</ul></div>
+      </div>
+    </section>
+
+    <section class="scenario-section" aria-labelledby="projects-title">
+      <div><p class="eyebrow">PLANNED LAUNCH SET</p><h2 id="projects-title">五个相关项目</h2></div>
+      <div class="scenario-project-grid">{view.projects.map((item) => <ScenarioProjectCard item={item} />)}</div>
+      <aside class="scenario-caveat" role="note"><strong>验证说明</strong><p>{data.verificationCaveat}</p></aside>
+    </section>
+
+    <section class="scenario-section" aria-labelledby="cases-title">
+      <div><p class="eyebrow">EXPLICIT X EVIDENCE</p><h2 id="cases-title">相关 X 案例</h2></div>
+      {view.relatedCases.length > 0 ? (
+        <ul class="scenario-case-list">{view.relatedCases.map((item) => <li><a href={href(`/case/${item.id}`)}>@{item.author.screenName}: {item.text}</a></li>)}</ul>
+      ) : (
+        <p class="scenario-empty">当前关系数据中没有这五个项目的明确 X 案例。本站不会根据名称或关键词推断关联。</p>
+      )}
+    </section>
+
+    <section class="scenario-cta" aria-labelledby="scenario-cta-title">
+      <p class="eyebrow">ONE DECISION / FIVE WORKDAYS</p>
+      <h2 id="scenario-cta-title">{data.cta.heading}</h2>
+      <p>{data.cta.body}</p>
+      <a href={href(data.cta.href)}>{data.cta.label}</a>
+    </section>
+  </article>
+</BaseLayout>

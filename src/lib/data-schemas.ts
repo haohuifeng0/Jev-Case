@@ -1,4 +1,8 @@
 import { z } from "zod";
+import type { Verifications } from "./verification-schema.ts";
+
+export { VerificationsSchema } from "./verification-schema.ts";
+export type { VerificationEvidence, VerificationRecord } from "./verification-schema.ts";
 
 const nonEmptyString = z.string().trim().min(1);
 const identifier = nonEmptyString.regex(/^[a-z0-9][a-z0-9._:/-]*$/i);
@@ -164,24 +168,29 @@ export const CatalogSourceSchema = z.strictObject({
   ]).nullable(),
 }).readonly();
 
-export const RelationsSchema = z.strictObject({
-  schemaVersion: z.literal(1),
-  relations: z.array(z.strictObject({
-    projectId: httpsUrl,
-    caseId: nonEmptyString,
-    type: z.enum(["announcement", "demo", "discussion", "benchmark", "derivative"]),
-    evidenceUrl: httpsUrl,
-  }).readonly()).readonly(),
+const relationSchema = z.strictObject({
+  projectId: httpsUrl,
+  caseId: nonEmptyString,
+  type: z.enum(["announcement", "demo", "discussion", "benchmark", "derivative"]),
+  evidenceUrl: httpsUrl,
 }).readonly();
 
-export const VerificationsSchema = z.strictObject({
+export const RelationsSchema = z.strictObject({
   schemaVersion: z.literal(1),
-  verifications: z.array(z.strictObject({
-    projectId: httpsUrl,
-    status: z.enum(["verified", "limited", "unverified"]),
-    reviewedAt: z.iso.date(),
-    evidenceUrls: z.array(httpsUrl).min(1).readonly(),
-  }).readonly()).readonly(),
+  relations: z.array(relationSchema).readonly(),
+}).superRefine((dataset, context) => {
+  const triples = new Set<string>();
+  dataset.relations.forEach((relation, index) => {
+    const triple = `${relation.projectId}\u0000${relation.caseId}\u0000${relation.type}`;
+    if (triples.has(triple)) {
+      context.addIssue({
+        code: "custom",
+        path: ["relations", index],
+        message: `duplicate relation triple ${relation.projectId}, ${relation.caseId}, ${relation.type}`,
+      });
+    }
+    triples.add(triple);
+  });
 }).readonly();
 
 export const ScenariosSchema = z.strictObject({
@@ -212,5 +221,6 @@ export type CaseAlias = CaseDatabase["aliases"][number];
 export type ProjectCatalog = z.infer<typeof ProjectCatalogSchema>;
 export type CatalogSource = z.infer<typeof CatalogSourceSchema>;
 export type ProjectCaseRelations = z.infer<typeof RelationsSchema>;
-export type Verifications = z.infer<typeof VerificationsSchema>;
+export type ProjectCaseRelation = z.infer<typeof relationSchema>;
+export type { Verifications };
 export type Scenarios = z.infer<typeof ScenariosSchema>;
