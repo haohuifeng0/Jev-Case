@@ -12,7 +12,7 @@ function hasImmutableGitHubPath(urlValue: string, expectedRevision: string): boo
   }
   if (url.hostname === "github.com") {
     const match = url.pathname.match(
-      /^\/[^/]+\/[^/]+\/(?:(?:blob|tree)\/([0-9a-f]{40})(?:\/.*)?|commit\/([0-9a-f]{40})\/?)$/,
+      /^\/[^/]+\/[^/]+\/(?:(?:blob|tree)\/([0-9a-f]{40})(?:\/.*)?|commit\/([0-9a-f]{40})(?:\/checks)?\/?)$/,
     );
     return match?.[1] === expectedRevision || match?.[2] === expectedRevision;
   }
@@ -21,6 +21,15 @@ function hasImmutableGitHubPath(urlValue: string, expectedRevision: string): boo
     return match?.[1] === expectedRevision;
   }
   return false;
+}
+
+function hasImmutableGitHubChecksPath(urlValue: string, expectedRevision: string): boolean {
+  const url = new URL(urlValue);
+  if (url.username !== "" || url.password !== "" || url.search !== "" || url.hash !== "" || url.hostname !== "github.com") {
+    return false;
+  }
+  const match = url.pathname.match(/^\/[^/]+\/[^/]+\/commit\/([0-9a-f]{40})\/checks\/?$/);
+  return match?.[1] === expectedRevision;
 }
 
 export const VerificationEvidenceSchema = z.strictObject({
@@ -38,12 +47,23 @@ export const VerificationEvidenceSchema = z.strictObject({
 }).readonly();
 
 const evidenceList = z.array(VerificationEvidenceSchema).readonly();
+const noEvidence = z.array(VerificationEvidenceSchema).length(0).readonly();
 const decisionCheckSchema = z.strictObject({
   outcome: z.enum(["pass", "fail", "not-found"]),
   evidence: evidenceList,
 }).superRefine((check, context) => {
   if (check.outcome === "pass" && check.evidence.length === 0) {
     context.addIssue({ code: "custom", path: ["evidence"], message: "pass requires evidence" });
+  }
+}).readonly();
+
+const runnableCheckSchema = decisionCheckSchema.superRefine((check, context) => {
+  if (check.outcome === "pass" && !check.evidence.some((item) => hasImmutableGitHubChecksPath(item.url, item.revision))) {
+    context.addIssue({
+      code: "custom",
+      path: ["evidence"],
+      message: "pass requires immutable GitHub commit checks evidence matching revision",
+    });
   }
 }).readonly();
 
@@ -74,22 +94,71 @@ const maintenanceCheckSchema = z.strictObject({
   }
 }).readonly();
 
-export const VerificationRecordSchema = z.strictObject({
+const publicSourceChecksSchema = z.strictObject({
+  directJevCall: decisionCheckSchema,
+  runnableCheck: runnableCheckSchema,
+  publicDemo: decisionCheckSchema,
+  license: licenseCheckSchema,
+  documentationDepth: documentationCheckSchema,
+  maintenanceSignal: maintenanceCheckSchema,
+}).readonly();
+
+const noPublicSourceChecksSchema = z.strictObject({
+  directJevCall: z.strictObject({ outcome: z.literal("not-found"), evidence: noEvidence }).readonly(),
+  runnableCheck: z.strictObject({ outcome: z.literal("not-found"), evidence: noEvidence }).readonly(),
+  publicDemo: z.strictObject({ outcome: z.literal("not-found"), evidence: noEvidence }).readonly(),
+  license: z.strictObject({ result: z.literal("not-found"), evidence: noEvidence }).readonly(),
+  documentationDepth: z.strictObject({ result: z.literal("not-found"), evidence: noEvidence }).readonly(),
+  maintenanceSignal: z.strictObject({ result: z.literal("not-found"), evidence: noEvidence }).readonly(),
+}).readonly();
+
+const publicSourceRecordSchema = z.strictObject({
   projectId: httpsUrl,
+  sourceAvailability: z.literal("public-source"),
+  revision,
   status: z.enum(VERIFICATION_STATUSES),
   reviewedAt: z.iso.date(),
-  checks: z.strictObject({
-    directJevCall: decisionCheckSchema,
-    runnableCheck: decisionCheckSchema,
-    publicDemo: decisionCheckSchema,
-    license: licenseCheckSchema,
-    documentationDepth: documentationCheckSchema,
-    maintenanceSignal: maintenanceCheckSchema,
-  }).readonly(),
+  checks: publicSourceChecksSchema,
   reviewerNotes: nonEmptyString.max(2_000),
-}).superRefine((record, context) => {
+}).readonly();
+
+const noPublicSourceRecordSchema = z.strictObject({
+  projectId: httpsUrl,
+  sourceAvailability: z.literal("no-public-source"),
+  revision: z.null(),
+  status: z.literal("unverified"),
+  reviewedAt: z.iso.date(),
+  checks: noPublicSourceChecksSchema,
+  reviewerNotes: nonEmptyString.max(2_000),
+}).readonly();
+
+export const VerificationRecordSchema = z.discriminatedUnion("sourceAvailability", [
+  publicSourceRecordSchema,
+  noPublicSourceRecordSchema,
+]).superRefine((record, context) => {
   if (record.reviewedAt > new Date().toISOString().slice(0, 10)) {
     context.addIssue({ code: "custom", path: ["reviewedAt"], message: "cannot be in the future" });
+  }
+  if (record.sourceAvailability === "no-public-source") return;
+  const evidence = Object.values(record.checks).flatMap((check) => check.evidence);
+  if (evidence.length === 0) {
+    context.addIssue({ code: "custom", path: ["checks"], message: "public-source records require immutable evidence" });
+  }
+  if (evidence.some((item) => item.revision !== record.revision)) {
+    context.addIssue({ code: "custom", path: ["revision"], message: "must match every immutable evidence revision" });
+  }
+  if (record.checks.runnableCheck.outcome === "pass") {
+    const directRevisions = new Set(record.checks.directJevCall.evidence.map((item) => item.revision));
+    const hasMatchingRevision = record.checks.runnableCheck.evidence.some(
+      (item) => directRevisions.has(item.revision) && hasImmutableGitHubChecksPath(item.url, item.revision),
+    );
+    if (!hasMatchingRevision) {
+      context.addIssue({
+        code: "custom",
+        path: ["checks", "runnableCheck", "evidence"],
+        message: "commit checks revision must match the direct-call record revision",
+      });
+    }
   }
   const derivedStatus = deriveVerificationStatus(record.checks);
   if (record.status !== derivedStatus) {

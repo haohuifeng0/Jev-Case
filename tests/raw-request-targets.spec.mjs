@@ -1,6 +1,8 @@
 import net from "node:net";
 import { expect, test } from "@playwright/test";
 
+const smokePort = Number(process.env.SMOKE_PORT ?? "4321");
+const smokeOrigin = `http://127.0.0.1:${smokePort}`;
 const rejectedTargets = [
   "/projects/%3Cscript%3Eignore%3C%2Fscript%3E",
   "/projects/%2e%2e%2fsecret",
@@ -9,7 +11,7 @@ const rejectedTargets = [
   "/projects/foo%5Cbar",
   "//projects/%FF",
   "/PROJECTS/%FF",
-  "http://127.0.0.1:4321/projects/%FF",
+  `${smokeOrigin}/projects/%FF`,
   "/case/%",
   "/case/%GG",
   "/case/%FF",
@@ -21,12 +23,12 @@ const rejectedTargets = [
 
 function sendRawRequest(target) {
   return new Promise((resolve, reject) => {
-    const socket = net.createConnection({ host: "127.0.0.1", port: 4321 });
+    const socket = net.createConnection({ host: "127.0.0.1", port: smokePort });
     let response = "";
     socket.setEncoding("utf8");
     socket.setTimeout(5_000, () => socket.destroy(new Error("raw request timed out")));
     socket.once("connect", () => {
-      socket.write(`GET ${target} HTTP/1.1\r\nHost: 127.0.0.1:4321\r\nConnection: close\r\n\r\n`);
+      socket.write(`GET ${target} HTTP/1.1\r\nHost: 127.0.0.1:${smokePort}\r\nConnection: close\r\n\r\n`);
     });
     socket.on("data", (chunk) => {
       response += chunk;

@@ -1,4 +1,1101 @@
 {
   "schemaVersion": 1,
-  "verifications": []
+  "verifications": [
+    {
+      "projectId": "https://github.com/gargpratyush/jev-router",
+      "status": "limited",
+      "reviewedAt": "2026-10-20",
+      "sourceAvailability": "public-source",
+      "revision": "38da6b84ea01241bfc41fbddc0928d0f40a703f0",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Router constructs the TypeSafe client and calls systemOne",
+            "url": "https://github.com/gargpratyush/jev-router/blob/38da6b84ea01241bfc41fbddc0928d0f40a703f0/src/router.mjs",
+            "revision": "38da6b84ea01241bfc41fbddc0928d0f40a703f0"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "not-found",
+          "evidence": [{
+            "label": "Advertised live script passes available while the implementation expects models",
+            "url": "https://github.com/gargpratyush/jev-router/blob/38da6b84ea01241bfc41fbddc0928d0f40a703f0/test/live-routing.mjs",
+            "revision": "38da6b84ea01241bfc41fbddc0928d0f40a703f0"
+          }]
+        },
+        "publicDemo": { "outcome": "not-found", "evidence": [] },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "MIT license at the reviewed revision",
+            "url": "https://github.com/gargpratyush/jev-router/blob/38da6b84ea01241bfc41fbddc0928d0f40a703f0/LICENSE",
+            "revision": "38da6b84ea01241bfc41fbddc0928d0f40a703f0"
+          }]
+        },
+        "documentationDepth": {
+          "result": "substantial",
+          "evidence": [{
+            "label": "Usage and routing documentation",
+            "url": "https://github.com/gargpratyush/jev-router/blob/38da6b84ea01241bfc41fbddc0928d0f40a703f0/README.md",
+            "revision": "38da6b84ea01241bfc41fbddc0928d0f40a703f0"
+          }]
+        },
+        "maintenanceSignal": {
+          "result": "active",
+          "evidence": [{
+            "label": "Test workflow present at the reviewed revision",
+            "url": "https://github.com/gargpratyush/jev-router/blob/38da6b84ea01241bfc41fbddc0928d0f40a703f0/.github/workflows/test.yml",
+            "revision": "38da6b84ea01241bfc41fbddc0928d0f40a703f0"
+          }]
+        }
+      },
+      "reviewerNotes": "Direct source confirms the Jev call. The advertised live script does not reach that call with its current input shape, and no pinned successful check was found. No mocked or synthetic result is treated as a passing live test; no live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/minilv/jev-auto-router",
+      "status": "limited",
+      "reviewedAt": "2026-10-20",
+      "sourceAvailability": "public-source",
+      "revision": "ff76b00fb18d0d64016a6a5d8f162875569a7894",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Adapter performs and validates the Jev Choice call",
+            "url": "https://github.com/miniLV/Jev-Auto-Router/blob/ff76b00fb18d0d64016a6a5d8f162875569a7894/src/jev-adapter.ts",
+            "revision": "ff76b00fb18d0d64016a6a5d8f162875569a7894"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "not-found",
+          "evidence": [{
+            "label": "HTTP-chain tests use local Jev and caller stubs",
+            "url": "https://github.com/miniLV/Jev-Auto-Router/blob/ff76b00fb18d0d64016a6a5d8f162875569a7894/test/http-chain.test.ts",
+            "revision": "ff76b00fb18d0d64016a6a5d8f162875569a7894"
+          }]
+        },
+        "publicDemo": { "outcome": "not-found", "evidence": [] },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "Apache-2.0 license at the reviewed revision",
+            "url": "https://github.com/miniLV/Jev-Auto-Router/blob/ff76b00fb18d0d64016a6a5d8f162875569a7894/LICENSE",
+            "revision": "ff76b00fb18d0d64016a6a5d8f162875569a7894"
+          }]
+        },
+        "documentationDepth": {
+          "result": "substantial",
+          "evidence": [{
+            "label": "Router design and behavior specification",
+            "url": "https://github.com/miniLV/Jev-Auto-Router/blob/ff76b00fb18d0d64016a6a5d8f162875569a7894/spec.md",
+            "revision": "ff76b00fb18d0d64016a6a5d8f162875569a7894"
+          }]
+        },
+        "maintenanceSignal": {
+          "result": "active",
+          "evidence": [{
+            "label": "Reviewed repository commit",
+            "url": "https://github.com/miniLV/Jev-Auto-Router/commit/ff76b00fb18d0d64016a6a5d8f162875569a7894",
+            "revision": "ff76b00fb18d0d64016a6a5d8f162875569a7894"
+          }]
+        }
+      },
+      "reviewerNotes": "Direct source confirms the Jev routing path. Tests use local stubs and explicitly do not establish live authentication or a real release result. Mocked or synthetic tests are not treated as live-call proof; no live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/protocol-lattice/harness-router",
+      "status": "limited",
+      "reviewedAt": "2026-10-20",
+      "sourceAvailability": "public-source",
+      "revision": "dedc72cbfa6aad73441934bc41fc6a75027f4101",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Provider builds a typed choice and posts to Jev or OpenRouter",
+            "url": "https://github.com/Protocol-Lattice/harness-router/blob/dedc72cbfa6aad73441934bc41fc6a75027f4101/src/harness_router/provider.py",
+            "revision": "dedc72cbfa6aad73441934bc41fc6a75027f4101"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "not-found",
+          "evidence": [{
+            "label": "Provider test uses MockTransport",
+            "url": "https://github.com/Protocol-Lattice/harness-router/blob/dedc72cbfa6aad73441934bc41fc6a75027f4101/tests/test_provider.py",
+            "revision": "dedc72cbfa6aad73441934bc41fc6a75027f4101"
+          }]
+        },
+        "publicDemo": {
+          "outcome": "not-found",
+          "evidence": [{
+            "label": "Public UI is documented as illustrative rather than live",
+            "url": "https://github.com/Protocol-Lattice/harness-router/blob/dedc72cbfa6aad73441934bc41fc6a75027f4101/docs/index.html",
+            "revision": "dedc72cbfa6aad73441934bc41fc6a75027f4101"
+          }]
+        },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "MIT license at the reviewed revision",
+            "url": "https://github.com/Protocol-Lattice/harness-router/blob/dedc72cbfa6aad73441934bc41fc6a75027f4101/LICENSE",
+            "revision": "dedc72cbfa6aad73441934bc41fc6a75027f4101"
+          }]
+        },
+        "documentationDepth": {
+          "result": "substantial",
+          "evidence": [{
+            "label": "Harness router usage documentation",
+            "url": "https://github.com/Protocol-Lattice/harness-router/blob/dedc72cbfa6aad73441934bc41fc6a75027f4101/README.md",
+            "revision": "dedc72cbfa6aad73441934bc41fc6a75027f4101"
+          }]
+        },
+        "maintenanceSignal": {
+          "result": "active",
+          "evidence": [{
+            "label": "Reviewed repository commit",
+            "url": "https://github.com/Protocol-Lattice/harness-router/commit/dedc72cbfa6aad73441934bc41fc6a75027f4101",
+            "revision": "dedc72cbfa6aad73441934bc41fc6a75027f4101"
+          }]
+        }
+      },
+      "reviewerNotes": "Direct source confirms the provider call. The provider test uses MockTransport, and the public interface is illustrative and hard-coded rather than a live demo. Mocked or synthetic tests are not treated as live-call proof; no live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/ruban-24/switchboard",
+      "status": "verified",
+      "reviewedAt": "2026-10-20",
+      "sourceAvailability": "public-source",
+      "revision": "b9239e89625189474fca2a730cdb193c163d1a43",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Classifier adapters perform TypeSafe selection",
+            "url": "https://github.com/ruban-24/switchboard/blob/b9239e89625189474fca2a730cdb193c163d1a43/src/classifier.ts",
+            "revision": "b9239e89625189474fca2a730cdb193c163d1a43"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "pass",
+          "evidence": [
+            {
+              "label": "Successful same-commit verification matrix",
+              "url": "https://github.com/ruban-24/switchboard/commit/b9239e89625189474fca2a730cdb193c163d1a43/checks",
+              "revision": "b9239e89625189474fca2a730cdb193c163d1a43"
+            },
+            {
+              "label": "Verification workflow definition",
+              "url": "https://github.com/ruban-24/switchboard/blob/b9239e89625189474fca2a730cdb193c163d1a43/.github/workflows/verify.yml",
+              "revision": "b9239e89625189474fca2a730cdb193c163d1a43"
+            }
+          ]
+        },
+        "publicDemo": { "outcome": "not-found", "evidence": [] },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "Apache-2.0 license at the reviewed revision",
+            "url": "https://github.com/ruban-24/switchboard/blob/b9239e89625189474fca2a730cdb193c163d1a43/LICENSE",
+            "revision": "b9239e89625189474fca2a730cdb193c163d1a43"
+          }]
+        },
+        "documentationDepth": {
+          "result": "substantial",
+          "evidence": [{
+            "label": "Documented privacy and data-flow boundaries",
+            "url": "https://github.com/ruban-24/switchboard/blob/b9239e89625189474fca2a730cdb193c163d1a43/docs/privacy.md",
+            "revision": "b9239e89625189474fca2a730cdb193c163d1a43"
+          }]
+        },
+        "maintenanceSignal": {
+          "result": "active",
+          "evidence": [{
+            "label": "Reviewed repository commit with successful checks",
+            "url": "https://github.com/ruban-24/switchboard/commit/b9239e89625189474fca2a730cdb193c163d1a43",
+            "revision": "b9239e89625189474fca2a730cdb193c163d1a43"
+          }]
+        }
+      },
+      "reviewerNotes": "Verified only because direct source and successful checks are tied to the same commit. Provider responses in the tests are synthetic, and the source documentation has default-version drift. Mocked or synthetic checks do not establish live service quality; no live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/ruivalim/decision-router",
+      "status": "limited",
+      "reviewedAt": "2026-10-20",
+      "sourceAvailability": "public-source",
+      "revision": "0111cac6e4f1fa478d1d7476db5d80aceb2f790d",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Backend sends a bearer-authenticated POST to v1/systemone",
+            "url": "https://github.com/Ruivalim/decision-router/blob/0111cac6e4f1fa478d1d7476db5d80aceb2f790d/src/backends/jev.ts",
+            "revision": "0111cac6e4f1fa478d1d7476db5d80aceb2f790d"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "not-found",
+          "evidence": [{
+            "label": "CI workflow definition at the reviewed revision",
+            "url": "https://github.com/Ruivalim/decision-router/blob/0111cac6e4f1fa478d1d7476db5d80aceb2f790d/.github/workflows/ci.yml",
+            "revision": "0111cac6e4f1fa478d1d7476db5d80aceb2f790d"
+          }]
+        },
+        "publicDemo": { "outcome": "not-found", "evidence": [] },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "MIT license at the reviewed revision",
+            "url": "https://github.com/Ruivalim/decision-router/blob/0111cac6e4f1fa478d1d7476db5d80aceb2f790d/LICENSE",
+            "revision": "0111cac6e4f1fa478d1d7476db5d80aceb2f790d"
+          }]
+        },
+        "documentationDepth": {
+          "result": "basic",
+          "evidence": [{
+            "label": "Live-evaluation requirements and commands",
+            "url": "https://github.com/Ruivalim/decision-router/blob/0111cac6e4f1fa478d1d7476db5d80aceb2f790d/Makefile",
+            "revision": "0111cac6e4f1fa478d1d7476db5d80aceb2f790d"
+          }]
+        },
+        "maintenanceSignal": {
+          "result": "active",
+          "evidence": [{
+            "label": "Build and test scripts at the reviewed revision",
+            "url": "https://github.com/Ruivalim/decision-router/blob/0111cac6e4f1fa478d1d7476db5d80aceb2f790d/package.json",
+            "revision": "0111cac6e4f1fa478d1d7476db5d80aceb2f790d"
+          }]
+        }
+      },
+      "reviewerNotes": "Direct source is pinned, but the available CI success URL is mutable and does not embed the reviewed revision, so the workflow definition is not treated as a passing runnable check. Jev tests use fake fetch, and live evaluation requires credentials. Mocked or synthetic checks do not establish a live call; no live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/godsboy/jev-agent-skill-router",
+      "status": "verified",
+      "reviewedAt": "2026-10-20",
+      "sourceAvailability": "public-source",
+      "revision": "e481a06ca37245cb579693d03e71d1c7282334db",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Transport source defines the TypeSafe endpoint and authenticated POST",
+            "url": "https://github.com/GodsBoy/jev-agent-skill-router/blob/e481a06ca37245cb579693d03e71d1c7282334db/src/jev_router/transport.py",
+            "revision": "e481a06ca37245cb579693d03e71d1c7282334db"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "pass",
+          "evidence": [
+            {
+              "label": "Successful same-commit checks",
+              "url": "https://github.com/GodsBoy/jev-agent-skill-router/commit/e481a06ca37245cb579693d03e71d1c7282334db/checks",
+              "revision": "e481a06ca37245cb579693d03e71d1c7282334db"
+            },
+            {
+              "label": "Exact-revision test workflow definition",
+              "url": "https://github.com/GodsBoy/jev-agent-skill-router/blob/e481a06ca37245cb579693d03e71d1c7282334db/.github/workflows/checks.yml",
+              "revision": "e481a06ca37245cb579693d03e71d1c7282334db"
+            }
+          ]
+        },
+        "publicDemo": {
+          "outcome": "not-found",
+          "evidence": [{
+            "label": "Self-produced evaluation artifact, not an independent public demo",
+            "url": "https://github.com/GodsBoy/jev-agent-skill-router/blob/e481a06ca37245cb579693d03e71d1c7282334db/results/final-v1.1.md",
+            "revision": "e481a06ca37245cb579693d03e71d1c7282334db"
+          }]
+        },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "MIT license at the reviewed revision",
+            "url": "https://github.com/GodsBoy/jev-agent-skill-router/blob/e481a06ca37245cb579693d03e71d1c7282334db/LICENSE",
+            "revision": "e481a06ca37245cb579693d03e71d1c7282334db"
+          }]
+        },
+        "documentationDepth": {
+          "result": "substantial",
+          "evidence": [{
+            "label": "Architecture documentation",
+            "url": "https://github.com/GodsBoy/jev-agent-skill-router/blob/e481a06ca37245cb579693d03e71d1c7282334db/docs/architecture.md",
+            "revision": "e481a06ca37245cb579693d03e71d1c7282334db"
+          }]
+        },
+        "maintenanceSignal": {
+          "result": "active",
+          "evidence": [{
+            "label": "Reviewed commit",
+            "url": "https://github.com/GodsBoy/jev-agent-skill-router/commit/e481a06ca37245cb579693d03e71d1c7282334db",
+            "revision": "e481a06ca37245cb579693d03e71d1c7282334db"
+          }]
+        }
+      },
+      "reviewerNotes": "Verified only because direct source and successful checks are tied to the same revision. The recorded evaluation is self-produced, not an independent public demo, and no mocked result is treated as live evidence. No live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/safzanpirani/pi-jev-skill-picker",
+      "status": "limited",
+      "reviewedAt": "2026-10-20",
+      "sourceAvailability": "public-source",
+      "revision": "510042246789e2171f393506f0c84d70eac24c0a",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Pi extension source registers the skill tool and invokes Jev selection",
+            "url": "https://github.com/safzanpirani/pi-jev-skill-picker/blob/510042246789e2171f393506f0c84d70eac24c0a/extensions/skill-jev.ts",
+            "revision": "510042246789e2171f393506f0c84d70eac24c0a"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "not-found",
+          "evidence": [
+            {
+              "label": "Documented check command without an exact-commit CI result",
+              "url": "https://github.com/safzanpirani/pi-jev-skill-picker/blob/510042246789e2171f393506f0c84d70eac24c0a/package.json",
+              "revision": "510042246789e2171f393506f0c84d70eac24c0a"
+            },
+            {
+              "label": "Stubbed test file does not establish a passing Jev call",
+              "url": "https://github.com/safzanpirani/pi-jev-skill-picker/blob/510042246789e2171f393506f0c84d70eac24c0a/test/skill-jev.test.ts",
+              "revision": "510042246789e2171f393506f0c84d70eac24c0a"
+            }
+          ]
+        },
+        "publicDemo": { "outcome": "not-found", "evidence": [] },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "MIT license at the reviewed revision",
+            "url": "https://github.com/safzanpirani/pi-jev-skill-picker/blob/510042246789e2171f393506f0c84d70eac24c0a/LICENSE",
+            "revision": "510042246789e2171f393506f0c84d70eac24c0a"
+          }]
+        },
+        "documentationDepth": {
+          "result": "basic",
+          "evidence": [{
+            "label": "Jev ranking, configuration, HTTP, and fallback source",
+            "url": "https://github.com/safzanpirani/pi-jev-skill-picker/blob/510042246789e2171f393506f0c84d70eac24c0a/extensions/jev.ts",
+            "revision": "510042246789e2171f393506f0c84d70eac24c0a"
+          }]
+        },
+        "maintenanceSignal": { "result": "unknown", "evidence": [] }
+      },
+      "reviewerNotes": "Direct source confirms the Pi extension path, but only a documented check and stubbed tests were found; neither is an exact-commit successful runnable result. No live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/dicklesworthstone/skillranker",
+      "status": "limited",
+      "reviewedAt": "2026-10-20",
+      "sourceAvailability": "public-source",
+      "revision": "ffff0c61652176fe0927e51c4981baa528e23486",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Hosted Jev transport source",
+            "url": "https://github.com/Dicklesworthstone/skillranker/blob/ffff0c61652176fe0927e51c4981baa528e23486/src/jev/client.rs",
+            "revision": "ffff0c61652176fe0927e51c4981baa528e23486"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "not-found",
+          "evidence": [{
+            "label": "Build and test configuration without same-commit successful checks",
+            "url": "https://github.com/Dicklesworthstone/skillranker/blob/ffff0c61652176fe0927e51c4981baa528e23486/Cargo.toml",
+            "revision": "ffff0c61652176fe0927e51c4981baa528e23486"
+          }]
+        },
+        "publicDemo": { "outcome": "not-found", "evidence": [] },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "Non-standard license with OpenAI and Anthropic rider",
+            "url": "https://github.com/Dicklesworthstone/skillranker/blob/ffff0c61652176fe0927e51c4981baa528e23486/LICENSE",
+            "revision": "ffff0c61652176fe0927e51c4981baa528e23486"
+          }]
+        },
+        "documentationDepth": {
+          "result": "substantial",
+          "evidence": [{
+            "label": "Jev transport documentation",
+            "url": "https://github.com/Dicklesworthstone/skillranker/blob/ffff0c61652176fe0927e51c4981baa528e23486/docs/jev-transport.md",
+            "revision": "ffff0c61652176fe0927e51c4981baa528e23486"
+          }]
+        },
+        "maintenanceSignal": {
+          "result": "active",
+          "evidence": [{
+            "label": "Reviewed Jev source tree",
+            "url": "https://github.com/Dicklesworthstone/skillranker/tree/ffff0c61652176fe0927e51c4981baa528e23486/src/jev",
+            "revision": "ffff0c61652176fe0927e51c4981baa528e23486"
+          }]
+        }
+      },
+      "reviewerNotes": "LICENSE ADOPTION RISK: SkillRanker uses a non-standard license with an OpenAI/Anthropic rider and GitHub classifies it as Other/NOASSERTION; obtain legal review before adoption. LIMITED: direct source is present, but no exact-commit successful runnable evidence was found and no local or live execution was performed. No mocked evidence is treated as live proof. No live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/parkavenue9639/jevloop",
+      "status": "limited",
+      "reviewedAt": "2026-10-20",
+      "sourceAvailability": "public-source",
+      "revision": "61e79949f36f2851d3c9de56ebda317913ec15ed",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Typed Jev decision source",
+            "url": "https://github.com/parkavenue9639/jevloop/blob/61e79949f36f2851d3c9de56ebda317913ec15ed/backend/jevloop/decision/model.py",
+            "revision": "61e79949f36f2851d3c9de56ebda317913ec15ed"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "not-found",
+          "evidence": [{
+            "label": "Offline smoke substitutes a deterministic driver and does not validate Jev",
+            "url": "https://github.com/parkavenue9639/jevloop/blob/61e79949f36f2851d3c9de56ebda317913ec15ed/backend/jevloop/evaluation/smoke.py",
+            "revision": "61e79949f36f2851d3c9de56ebda317913ec15ed"
+          }]
+        },
+        "publicDemo": {
+          "outcome": "not-found",
+          "evidence": [{
+            "label": "Self-reported historical session, not an independent public live demo",
+            "url": "https://github.com/parkavenue9639/jevloop/blob/61e79949f36f2851d3c9de56ebda317913ec15ed/docs/evaluation/fastapi-case-study.md",
+            "revision": "61e79949f36f2851d3c9de56ebda317913ec15ed"
+          }]
+        },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "Apache-2.0 license at the reviewed revision",
+            "url": "https://github.com/parkavenue9639/jevloop/blob/61e79949f36f2851d3c9de56ebda317913ec15ed/LICENSE",
+            "revision": "61e79949f36f2851d3c9de56ebda317913ec15ed"
+          }]
+        },
+        "documentationDepth": {
+          "result": "basic",
+          "evidence": [{
+            "label": "Hosted and local endpoint selection source",
+            "url": "https://github.com/parkavenue9639/jevloop/blob/61e79949f36f2851d3c9de56ebda317913ec15ed/backend/jevloop/decision/laya.py",
+            "revision": "61e79949f36f2851d3c9de56ebda317913ec15ed"
+          }]
+        },
+        "maintenanceSignal": { "result": "unknown", "evidence": [] }
+      },
+      "reviewerNotes": "Direct typed source is present, but the offline smoke uses a deterministic fake driver and the committed historical session is self-reported rather than an independent public demo. No exact-commit successful CI was found. No live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/kerpopule/hermes-jev-skills",
+      "status": "verified",
+      "reviewedAt": "2026-10-20",
+      "sourceAvailability": "public-source",
+      "revision": "7b56de6627557e8bebb22f1538d75b37555a5623",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Client source defines endpoints and the typed question contract",
+            "url": "https://github.com/kerpopule/hermes-jev-skills/blob/7b56de6627557e8bebb22f1538d75b37555a5623/jevkit/client.py",
+            "revision": "7b56de6627557e8bebb22f1538d75b37555a5623"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "pass",
+          "evidence": [
+            {
+              "label": "Successful same-commit checks",
+              "url": "https://github.com/kerpopule/hermes-jev-skills/commit/7b56de6627557e8bebb22f1538d75b37555a5623/checks",
+              "revision": "7b56de6627557e8bebb22f1538d75b37555a5623"
+            },
+            {
+              "label": "Exact-revision Unix CI workflow definition",
+              "url": "https://github.com/kerpopule/hermes-jev-skills/blob/7b56de6627557e8bebb22f1538d75b37555a5623/.github/workflows/test.yml",
+              "revision": "7b56de6627557e8bebb22f1538d75b37555a5623"
+            }
+          ]
+        },
+        "publicDemo": {
+          "outcome": "not-found",
+          "evidence": [{
+            "label": "Offline demo uses invented fake data and does not prove live Jev quality",
+            "url": "https://github.com/kerpopule/hermes-jev-skills/blob/7b56de6627557e8bebb22f1538d75b37555a5623/scripts/demo_home.py",
+            "revision": "7b56de6627557e8bebb22f1538d75b37555a5623"
+          }]
+        },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "MIT license at the reviewed revision",
+            "url": "https://github.com/kerpopule/hermes-jev-skills/blob/7b56de6627557e8bebb22f1538d75b37555a5623/LICENSE",
+            "revision": "7b56de6627557e8bebb22f1538d75b37555a5623"
+          }]
+        },
+        "documentationDepth": {
+          "result": "substantial",
+          "evidence": [{
+            "label": "Measurement and provenance documentation",
+            "url": "https://github.com/kerpopule/hermes-jev-skills/blob/7b56de6627557e8bebb22f1538d75b37555a5623/docs/measurement-and-provenance.md",
+            "revision": "7b56de6627557e8bebb22f1538d75b37555a5623"
+          }]
+        },
+        "maintenanceSignal": {
+          "result": "active",
+          "evidence": [{
+            "label": "Reviewed commit",
+            "url": "https://github.com/kerpopule/hermes-jev-skills/commit/7b56de6627557e8bebb22f1538d75b37555a5623",
+            "revision": "7b56de6627557e8bebb22f1538d75b37555a5623"
+          }]
+        }
+      },
+      "reviewerNotes": "Verified only because direct source and successful checks are tied to the same revision. The package depends on hosted Jev behavior, while offline demos use invented fake data and do not establish live service quality. No live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/y0usaf/pi-jev",
+      "status": "limited",
+      "reviewedAt": "2026-10-21",
+      "sourceAvailability": "public-source",
+      "revision": "cbbc35dacee9337e575f7de913ef2757ad64a198",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Bearer-authenticated Jev POST and mutable default model",
+            "url": "https://github.com/y0usaf/pi-jev/blob/cbbc35dacee9337e575f7de913ef2757ad64a198/src/client.ts",
+            "revision": "cbbc35dacee9337e575f7de913ef2757ad64a198"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "not-found",
+          "evidence": [{
+            "label": "Publish workflow without behavioral verification",
+            "url": "https://github.com/y0usaf/pi-jev/blob/cbbc35dacee9337e575f7de913ef2757ad64a198/.github/workflows/publish.yml",
+            "revision": "cbbc35dacee9337e575f7de913ef2757ad64a198"
+          }]
+        },
+        "publicDemo": { "outcome": "not-found", "evidence": [] },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "MIT license at the reviewed revision",
+            "url": "https://github.com/y0usaf/pi-jev/blob/cbbc35dacee9337e575f7de913ef2757ad64a198/LICENSE",
+            "revision": "cbbc35dacee9337e575f7de913ef2757ad64a198"
+          }]
+        },
+        "documentationDepth": {
+          "result": "substantial",
+          "evidence": [
+            {
+              "label": "Risk questions and decision thresholds",
+              "url": "https://github.com/y0usaf/pi-jev/blob/cbbc35dacee9337e575f7de913ef2757ad64a198/src/gate.ts",
+              "revision": "cbbc35dacee9337e575f7de913ef2757ad64a198"
+            },
+            {
+              "label": "Shadow defaults, headless proceed behavior, and fail-open exception path",
+              "url": "https://github.com/y0usaf/pi-jev/blob/cbbc35dacee9337e575f7de913ef2757ad64a198/src/index.ts",
+              "revision": "cbbc35dacee9337e575f7de913ef2757ad64a198"
+            }
+          ]
+        },
+        "maintenanceSignal": { "result": "unknown", "evidence": [] }
+      },
+      "reviewerNotes": "LIMITED: pinned source confirms the Jev call, but defaults are shadow mode, headless enforcement normally warns and proceeds, and gate exceptions fail open. This is advisory, not a permission or security boundary. No live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/leepokai/jev-guard",
+      "status": "limited",
+      "reviewedAt": "2026-10-21",
+      "sourceAvailability": "public-source",
+      "revision": "cda06c49ceaac207904142ec92bfab793bbd18b1",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Provider POST with retry and timeout handling",
+            "url": "https://github.com/leepokai/jev-guard/blob/cda06c49ceaac207904142ec92bfab793bbd18b1/src/jev.js",
+            "revision": "cda06c49ceaac207904142ec92bfab793bbd18b1"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "not-found",
+          "evidence": [{
+            "label": "Repository tests without same-revision successful checks",
+            "url": "https://github.com/leepokai/jev-guard/blob/cda06c49ceaac207904142ec92bfab793bbd18b1/test/guard.test.js",
+            "revision": "cda06c49ceaac207904142ec92bfab793bbd18b1"
+          }]
+        },
+        "publicDemo": { "outcome": "not-found", "evidence": [] },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "MIT license at the reviewed revision",
+            "url": "https://github.com/leepokai/jev-guard/blob/cda06c49ceaac207904142ec92bfab793bbd18b1/LICENSE",
+            "revision": "cda06c49ceaac207904142ec92bfab793bbd18b1"
+          }]
+        },
+        "documentationDepth": {
+          "result": "substantial",
+          "evidence": [
+            {
+              "label": "Risk questions and deterministic policy",
+              "url": "https://github.com/leepokai/jev-guard/blob/cda06c49ceaac207904142ec92bfab793bbd18b1/src/guard.js",
+              "revision": "cda06c49ceaac207904142ec92bfab793bbd18b1"
+            },
+            {
+              "label": "Default fail-open policy",
+              "url": "https://github.com/leepokai/jev-guard/blob/cda06c49ceaac207904142ec92bfab793bbd18b1/SECURITY.md",
+              "revision": "cda06c49ceaac207904142ec92bfab793bbd18b1"
+            },
+            {
+              "label": "Post-result scanning remains fail-open",
+              "url": "https://github.com/leepokai/jev-guard/blob/cda06c49ceaac207904142ec92bfab793bbd18b1/src/opencode.js",
+              "revision": "cda06c49ceaac207904142ec92bfab793bbd18b1"
+            }
+          ]
+        },
+        "maintenanceSignal": { "result": "unknown", "evidence": [] }
+      },
+      "reviewerNotes": "LIMITED: pinned source confirms the provider call and deterministic policy, but the documented default is fail-open; post-result scanning remains fail-open even when pre-action handling is configured fail-closed. Hook coverage is host-dependent, so this is not a sandbox or security boundary. No live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/veridicaltech/edward",
+      "status": "limited",
+      "reviewedAt": "2026-10-21",
+      "sourceAvailability": "public-source",
+      "revision": "af5471e2d62d30887ca309e2d76d1ac527317c61",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Direct Jev POST, answer mapping, and rule-only fallback",
+            "url": "https://github.com/VeridicalTech/Edward/blob/af5471e2d62d30887ca309e2d76d1ac527317c61/edward/backends.py",
+            "revision": "af5471e2d62d30887ca309e2d76d1ac527317c61"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "not-found",
+          "evidence": [{
+            "label": "CI workflow definition without captured same-revision successful checks",
+            "url": "https://github.com/VeridicalTech/Edward/blob/af5471e2d62d30887ca309e2d76d1ac527317c61/.github/workflows/ci.yml",
+            "revision": "af5471e2d62d30887ca309e2d76d1ac527317c61"
+          }]
+        },
+        "publicDemo": { "outcome": "not-found", "evidence": [] },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "MIT license at the reviewed revision",
+            "url": "https://github.com/VeridicalTech/Edward/blob/af5471e2d62d30887ca309e2d76d1ac527317c61/LICENSE",
+            "revision": "af5471e2d62d30887ca309e2d76d1ac527317c61"
+          }]
+        },
+        "documentationDepth": {
+          "result": "substantial",
+          "evidence": [
+            {
+              "label": "Deterministic triggers, advisory scorer boundary, and ignored ingestion exceptions",
+              "url": "https://github.com/VeridicalTech/Edward/blob/af5471e2d62d30887ca309e2d76d1ac527317c61/edward/engine.py",
+              "revision": "af5471e2d62d30887ca309e2d76d1ac527317c61"
+            },
+            {
+              "label": "Human approval server behavior",
+              "url": "https://github.com/VeridicalTech/Edward/blob/af5471e2d62d30887ca309e2d76d1ac527317c61/edward/approval.py",
+              "revision": "af5471e2d62d30887ca309e2d76d1ac527317c61"
+            },
+            {
+              "label": "Human approval command path",
+              "url": "https://github.com/VeridicalTech/Edward/blob/af5471e2d62d30887ca309e2d76d1ac527317c61/edward/cli.py",
+              "revision": "af5471e2d62d30887ca309e2d76d1ac527317c61"
+            }
+          ]
+        },
+        "maintenanceSignal": { "result": "unknown", "evidence": [] }
+      },
+      "reviewerNotes": "LIMITED: pinned source confirms a supervisor with deterministic triggers and rule-only fallback when credentials or the backend are missing. Event or trigger ingestion exceptions skip that check, and the human approval path is narrower than the action name implies. It is not a universal pre-action, fail-closed, or human-approval gate, and not a permission or security boundary. No live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/qkal/canny",
+      "status": "verified",
+      "reviewedAt": "2026-10-21",
+      "sourceAvailability": "public-source",
+      "revision": "f2c5e53779445d60dc4a09d2dbced2308fccb820",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Typed Jev Noul call and fallback",
+            "url": "https://github.com/qkal/Canny/blob/f2c5e53779445d60dc4a09d2dbced2308fccb820/src/jev.ts",
+            "revision": "f2c5e53779445d60dc4a09d2dbced2308fccb820"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "pass",
+          "evidence": [
+            {
+              "label": "Successful same-revision checks",
+              "url": "https://github.com/qkal/Canny/commit/f2c5e53779445d60dc4a09d2dbced2308fccb820/checks",
+              "revision": "f2c5e53779445d60dc4a09d2dbced2308fccb820"
+            },
+            {
+              "label": "Exact-revision CI workflow definition",
+              "url": "https://github.com/qkal/Canny/blob/f2c5e53779445d60dc4a09d2dbced2308fccb820/.github/workflows/ci.yml",
+              "revision": "f2c5e53779445d60dc4a09d2dbced2308fccb820"
+            }
+          ]
+        },
+        "publicDemo": { "outcome": "not-found", "evidence": [] },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "MIT license at the reviewed revision",
+            "url": "https://github.com/qkal/Canny/blob/f2c5e53779445d60dc4a09d2dbced2308fccb820/LICENSE",
+            "revision": "f2c5e53779445d60dc4a09d2dbced2308fccb820"
+          }]
+        },
+        "documentationDepth": {
+          "result": "substantial",
+          "evidence": [
+            {
+              "label": "Deterministic post-edit gate and local ledger behavior",
+              "url": "https://github.com/qkal/Canny/blob/f2c5e53779445d60dc4a09d2dbced2308fccb820/src/hook.ts",
+              "revision": "f2c5e53779445d60dc4a09d2dbced2308fccb820"
+            },
+            {
+              "label": "Hook-level exception path fails open",
+              "url": "https://github.com/qkal/Canny/blob/f2c5e53779445d60dc4a09d2dbced2308fccb820/src/cli.ts",
+              "revision": "f2c5e53779445d60dc4a09d2dbced2308fccb820"
+            },
+            {
+              "label": "Project scope describes a speed bump rather than a sandbox",
+              "url": "https://github.com/qkal/Canny/blob/f2c5e53779445d60dc4a09d2dbced2308fccb820/README.md",
+              "revision": "f2c5e53779445d60dc4a09d2dbced2308fccb820"
+            }
+          ]
+        },
+        "maintenanceSignal": {
+          "result": "active",
+          "evidence": [{
+            "label": "Reviewed commit associated with successful checks",
+            "url": "https://github.com/qkal/Canny/commit/f2c5e53779445d60dc4a09d2dbced2308fccb820",
+            "revision": "f2c5e53779445d60dc4a09d2dbced2308fccb820"
+          }]
+        }
+      },
+      "reviewerNotes": "VERIFIED UNDER THIS RUBRIC ONLY: direct source and successful checks are tied to the same revision. Canny's runtime ledger is mutable local JSON, not immutable evidence or an attested audit trail. Hook-level exceptions fail open, and the project is a speed bump, not a sandbox, permission control, or security boundary. No live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/ckorhonen/jev-lint",
+      "status": "limited",
+      "reviewedAt": "2026-10-21",
+      "sourceAvailability": "public-source",
+      "revision": "a89a6d9d8d2e75fac456bf6a7aab1f4068689124",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Rule gate and direct Jev judgment path",
+            "url": "https://github.com/ckorhonen/jev-lint/blob/a89a6d9d8d2e75fac456bf6a7aab1f4068689124/src/lint.ts",
+            "revision": "a89a6d9d8d2e75fac456bf6a7aab1f4068689124"
+          }]
+        },
+        "runnableCheck": { "outcome": "not-found", "evidence": [] },
+        "publicDemo": { "outcome": "not-found", "evidence": [] },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "MIT license at the reviewed revision",
+            "url": "https://github.com/ckorhonen/jev-lint/blob/a89a6d9d8d2e75fac456bf6a7aab1f4068689124/LICENSE",
+            "revision": "a89a6d9d8d2e75fac456bf6a7aab1f4068689124"
+          }]
+        },
+        "documentationDepth": {
+          "result": "substantial",
+          "evidence": [
+            {
+              "label": "Jev questions and thresholds",
+              "url": "https://github.com/ckorhonen/jev-lint/blob/a89a6d9d8d2e75fac456bf6a7aab1f4068689124/src/jev.ts",
+              "revision": "a89a6d9d8d2e75fac456bf6a7aab1f4068689124"
+            },
+            {
+              "label": "Pre-write, post-write, and two-denial bypass behavior",
+              "url": "https://github.com/ckorhonen/jev-lint/blob/a89a6d9d8d2e75fac456bf6a7aab1f4068689124/src/hook.ts",
+              "revision": "a89a6d9d8d2e75fac456bf6a7aab1f4068689124"
+            },
+            {
+              "label": "Fail-open behavior and coverage limits",
+              "url": "https://github.com/ckorhonen/jev-lint/blob/a89a6d9d8d2e75fac456bf6a7aab1f4068689124/src/checks.ts",
+              "revision": "a89a6d9d8d2e75fac456bf6a7aab1f4068689124"
+            }
+          ]
+        },
+        "maintenanceSignal": { "result": "unknown", "evidence": [] }
+      },
+      "reviewerNotes": "LIMITED: pinned source confirms Jev judgments and local rule thresholds, but checks include fail-open paths and the hook allows a two-denial bypass. This is advisory developer feedback, not a mandatory security, compliance, permission, or edit-enforcement boundary. No live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/different-ai/openwork",
+      "status": "limited",
+      "reviewedAt": "2026-10-21",
+      "sourceAvailability": "public-source",
+      "revision": "df9ef2cc33e46b0f9006c51c3c8bf09720921ba5",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Verification adapter sends the direct Jev request",
+            "url": "https://github.com/different-ai/openwork/blob/df9ef2cc33e46b0f9006c51c3c8bf09720921ba5/evals/packages/testkit/src/verification-jev.ts",
+            "revision": "df9ef2cc33e46b0f9006c51c3c8bf09720921ba5"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "not-found",
+          "evidence": [{
+            "label": "Deterministic replay runs selected predefined checks rather than judging app state",
+            "url": "https://github.com/different-ai/openwork/blob/df9ef2cc33e46b0f9006c51c3c8bf09720921ba5/evals/packages/testkit/src/verification.ts",
+            "revision": "df9ef2cc33e46b0f9006c51c3c8bf09720921ba5"
+          }]
+        },
+        "publicDemo": {
+          "outcome": "not-found",
+          "evidence": [{
+            "label": "Checked-in benchmark uses synthetic tasks and is not exact-commit live proof",
+            "url": "https://github.com/different-ai/openwork/blob/df9ef2cc33e46b0f9006c51c3c8bf09720921ba5/evals/scripts/verification-benchmark.ts",
+            "revision": "df9ef2cc33e46b0f9006c51c3c8bf09720921ba5"
+          }]
+        },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "MIT license with an enterprise-directory split",
+            "url": "https://github.com/different-ai/openwork/blob/df9ef2cc33e46b0f9006c51c3c8bf09720921ba5/LICENSE",
+            "revision": "df9ef2cc33e46b0f9006c51c3c8bf09720921ba5"
+          }]
+        },
+        "documentationDepth": { "result": "basic", "evidence": [] },
+        "maintenanceSignal": {
+          "result": "active",
+          "evidence": [{
+            "label": "Reviewed OpenWork commit",
+            "url": "https://github.com/different-ai/openwork/commit/df9ef2cc33e46b0f9006c51c3c8bf09720921ba5",
+            "revision": "df9ef2cc33e46b0f9006c51c3c8bf09720921ba5"
+          }]
+        }
+      },
+      "reviewerNotes": "LIMITED: pinned source shows a closed-set verification-plan compiler followed by deterministic replay of predefined assertions. It does not independently judge actual application output and is not an automatic merge or completion gate. The benchmark is synthetic, not a live-provider result. No live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/thruwire/foreman",
+      "status": "verified",
+      "reviewedAt": "2026-10-21",
+      "sourceAvailability": "public-source",
+      "revision": "c3142ef636617f32f772140125aa310d81ceece9",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Batched Jev backend source",
+            "url": "https://github.com/thruwire/foreman/blob/c3142ef636617f32f772140125aa310d81ceece9/src/foreman/backends.py",
+            "revision": "c3142ef636617f32f772140125aa310d81ceece9"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "pass",
+          "evidence": [
+            {
+              "label": "Successful exact-commit checks",
+              "url": "https://github.com/thruwire/foreman/commit/c3142ef636617f32f772140125aa310d81ceece9/checks",
+              "revision": "c3142ef636617f32f772140125aa310d81ceece9"
+            },
+            {
+              "label": "Exact-commit test workflow definition",
+              "url": "https://github.com/thruwire/foreman/blob/c3142ef636617f32f772140125aa310d81ceece9/.github/workflows/test.yml",
+              "revision": "c3142ef636617f32f772140125aa310d81ceece9"
+            }
+          ]
+        },
+        "publicDemo": { "outcome": "not-found", "evidence": [] },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "MIT license at the reviewed revision",
+            "url": "https://github.com/thruwire/foreman/blob/c3142ef636617f32f772140125aa310d81ceece9/LICENSE",
+            "revision": "c3142ef636617f32f772140125aa310d81ceece9"
+          }]
+        },
+        "documentationDepth": {
+          "result": "substantial",
+          "evidence": [
+            {
+              "label": "Deterministic trigger and scorer boundary",
+              "url": "https://github.com/thruwire/foreman/blob/c3142ef636617f32f772140125aa310d81ceece9/src/foreman/engine.py",
+              "revision": "c3142ef636617f32f772140125aa310d81ceece9"
+            },
+            {
+              "label": "Human escalation threshold definition",
+              "url": "https://github.com/thruwire/foreman/blob/c3142ef636617f32f772140125aa310d81ceece9/src/foreman/responsibilities/definitions/core.human-escalation.toml",
+              "revision": "c3142ef636617f32f772140125aa310d81ceece9"
+            }
+          ]
+        },
+        "maintenanceSignal": {
+          "result": "active",
+          "evidence": [{
+            "label": "Reviewed Foreman commit",
+            "url": "https://github.com/thruwire/foreman/commit/c3142ef636617f32f772140125aa310d81ceece9",
+            "revision": "c3142ef636617f32f772140125aa310d81ceece9"
+          }]
+        }
+      },
+      "reviewerNotes": "VERIFIED UNDER THIS RUBRIC ONLY: direct source and successful checks are tied to the same revision. Foreman supervises completion signals with deterministic triggers, Jev scoring, and a thresholded human-escalation responsibility; this is not proof that an output is correct, does not require human sign-off for every completion, and is experimental rather than an isolation boundary. The live report is author-attested and CI is offline. No live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/tech-byte-frontier/jevgate",
+      "status": "verified",
+      "reviewedAt": "2026-10-21",
+      "sourceAvailability": "public-source",
+      "revision": "f061e8b9d9fc38eb167676257283ce0943b440fc",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Direct Jev provider configuration",
+            "url": "https://github.com/Tech-Byte-Frontier/jevgate/blob/f061e8b9d9fc38eb167676257283ce0943b440fc/src/provider.rs",
+            "revision": "f061e8b9d9fc38eb167676257283ce0943b440fc"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "pass",
+          "evidence": [
+            {
+              "label": "Successful exact-commit checks",
+              "url": "https://github.com/Tech-Byte-Frontier/jevgate/commit/f061e8b9d9fc38eb167676257283ce0943b440fc/checks",
+              "revision": "f061e8b9d9fc38eb167676257283ce0943b440fc"
+            },
+            {
+              "label": "Exact-commit CI workflow definition",
+              "url": "https://github.com/Tech-Byte-Frontier/jevgate/blob/f061e8b9d9fc38eb167676257283ce0943b440fc/.github/workflows/ci.yml",
+              "revision": "f061e8b9d9fc38eb167676257283ce0943b440fc"
+            }
+          ]
+        },
+        "publicDemo": { "outcome": "not-found", "evidence": [] },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "MIT license option at the reviewed revision",
+            "url": "https://github.com/Tech-Byte-Frontier/jevgate/blob/f061e8b9d9fc38eb167676257283ce0943b440fc/LICENSE-MIT",
+            "revision": "f061e8b9d9fc38eb167676257283ce0943b440fc"
+          }]
+        },
+        "documentationDepth": {
+          "result": "substantial",
+          "evidence": [
+            {
+              "label": "Bounded authenticated transport",
+              "url": "https://github.com/Tech-Byte-Frontier/jevgate/blob/f061e8b9d9fc38eb167676257283ce0943b440fc/src/transport/mod.rs",
+              "revision": "f061e8b9d9fc38eb167676257283ce0943b440fc"
+            },
+            {
+              "label": "Deterministic pass, fail, and incomplete gate",
+              "url": "https://github.com/Tech-Byte-Frontier/jevgate/blob/f061e8b9d9fc38eb167676257283ce0943b440fc/src/gate.rs",
+              "revision": "f061e8b9d9fc38eb167676257283ce0943b440fc"
+            }
+          ]
+        },
+        "maintenanceSignal": {
+          "result": "active",
+          "evidence": [{
+            "label": "Reviewed JevGate commit",
+            "url": "https://github.com/Tech-Byte-Frontier/jevgate/commit/f061e8b9d9fc38eb167676257283ce0943b440fc",
+            "revision": "f061e8b9d9fc38eb167676257283ce0943b440fc"
+          }]
+        }
+      },
+      "reviewerNotes": "VERIFIED UNDER THIS RUBRIC ONLY: direct provider source and successful checks are tied to the same revision. JevGate is a deterministic code-review gate with pass, fail, and incomplete states; it is pre-1.0, self-reviewed, and model-confidence based, so it is not equivalent to human review or a correctness guarantee. No live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://blink.review",
+      "status": "unverified",
+      "reviewedAt": "2026-10-21",
+      "sourceAvailability": "no-public-source",
+      "revision": null,
+      "checks": {
+        "directJevCall": { "outcome": "not-found", "evidence": [] },
+        "runnableCheck": { "outcome": "not-found", "evidence": [] },
+        "publicDemo": { "outcome": "not-found", "evidence": [] },
+        "license": { "result": "not-found", "evidence": [] },
+        "documentationDepth": { "result": "not-found", "evidence": [] },
+        "maintenanceSignal": { "result": "not-found", "evidence": [] }
+      },
+      "reviewerNotes": "UNVERIFIED: Blink is presented by its first-party site as a hosted CLI in public beta, with rolling binaries downloaded from blink.review. No official immutable public source repository, Git revision, or public source license could be established. The unrelated ellipsis-dev/blink repository is not substituted, and a binary checksum is not fabricated as a commit. Direct-call and check behavior cannot be audited from public source. No live Jev call was run or claimed. Remote code was not executed."
+    },
+    {
+      "projectId": "https://github.com/egma-ai/jev-code-reviewer",
+      "status": "verified",
+      "reviewedAt": "2026-10-21",
+      "sourceAvailability": "public-source",
+      "revision": "5bc56f2e8116af8888f98e4c0f1002956011f204",
+      "checks": {
+        "directJevCall": {
+          "outcome": "pass",
+          "evidence": [{
+            "label": "Direct Jev ranking and response validation",
+            "url": "https://github.com/egma-ai/jev-code-reviewer/blob/5bc56f2e8116af8888f98e4c0f1002956011f204/src/providers.mjs",
+            "revision": "5bc56f2e8116af8888f98e4c0f1002956011f204"
+          }]
+        },
+        "runnableCheck": {
+          "outcome": "pass",
+          "evidence": [
+            {
+              "label": "Successful exact-commit checks",
+              "url": "https://github.com/egma-ai/jev-code-reviewer/commit/5bc56f2e8116af8888f98e4c0f1002956011f204/checks",
+              "revision": "5bc56f2e8116af8888f98e4c0f1002956011f204"
+            },
+            {
+              "label": "Exact-commit test workflow definition",
+              "url": "https://github.com/egma-ai/jev-code-reviewer/blob/5bc56f2e8116af8888f98e4c0f1002956011f204/.github/workflows/test.yml",
+              "revision": "5bc56f2e8116af8888f98e4c0f1002956011f204"
+            }
+          ]
+        },
+        "publicDemo": {
+          "outcome": "not-found",
+          "evidence": [{
+            "label": "Recorded replay is not a full live-provider demonstration",
+            "url": "https://github.com/egma-ai/jev-code-reviewer/blob/5bc56f2e8116af8888f98e4c0f1002956011f204/demo/README.md",
+            "revision": "5bc56f2e8116af8888f98e4c0f1002956011f204"
+          }]
+        },
+        "license": {
+          "result": "found",
+          "evidence": [{
+            "label": "MIT license at the reviewed revision",
+            "url": "https://github.com/egma-ai/jev-code-reviewer/blob/5bc56f2e8116af8888f98e4c0f1002956011f204/LICENSE",
+            "revision": "5bc56f2e8116af8888f98e4c0f1002956011f204"
+          }]
+        },
+        "documentationDepth": {
+          "result": "substantial",
+          "evidence": [{
+            "label": "Policy escalation and fail-closed priority handling",
+            "url": "https://github.com/egma-ai/jev-code-reviewer/blob/5bc56f2e8116af8888f98e4c0f1002956011f204/src/config.mjs",
+            "revision": "5bc56f2e8116af8888f98e4c0f1002956011f204"
+          }]
+        },
+        "maintenanceSignal": {
+          "result": "active",
+          "evidence": [{
+            "label": "Reviewed Jev Code Reviewer commit",
+            "url": "https://github.com/egma-ai/jev-code-reviewer/commit/5bc56f2e8116af8888f98e4c0f1002956011f204",
+            "revision": "5bc56f2e8116af8888f98e4c0f1002956011f204"
+          }]
+        }
+      },
+      "reviewerNotes": "VERIFIED UNDER THIS RUBRIC ONLY: direct source and successful checks are tied to the same revision. This tool prioritizes code-review attention and escalates uncertain or high-priority hunks; it does not prove code correctness, business acceptance, or task completion. Provider tests are mocked, coverage is capped, the replay is not a full live-provider demo, and reviewed diffs may carry privacy implications. No live Jev call was run or claimed. Remote code was not executed."
+    }
+  ]
 }

@@ -1,9 +1,10 @@
 import { expect, test } from "@playwright/test";
 import { serializeJsonLd } from "../src/lib/metadata";
 
-test.beforeEach(async ({ context }) => {
+test.beforeEach(async ({ context, baseURL }) => {
+  const localOrigin = new URL(baseURL ?? "http://127.0.0.1:4321").origin;
   await context.route(
-    (url) => url.origin !== "http://127.0.0.1:4321",
+    (url) => url.origin !== localOrigin,
     (route) => route.abort("blockedbyclient"),
   );
 });

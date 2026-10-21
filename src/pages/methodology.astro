@@ -18,11 +18,20 @@ const supportingChecks = {
 const examples = [
   VerificationRecordSchema.parse({
     projectId: "https://github.com/example/verified",
+    sourceAvailability: "public-source",
+    revision,
     status: "verified",
     reviewedAt: "2026-10-01",
     checks: {
       directJevCall: { outcome: "pass", evidence: [evidence("直接调用源码（示例）")] },
-      runnableCheck: { outcome: "pass", evidence: [evidence("可运行检查（示例）")] },
+      runnableCheck: {
+        outcome: "pass",
+        evidence: [{
+          label: "可运行检查（示例）",
+          revision,
+          url: `https://github.com/example/project/commit/${revision}/checks`,
+        }],
+      },
       publicDemo: { outcome: "not-found", evidence: [] },
       ...supportingChecks,
     },
@@ -30,6 +39,8 @@ const examples = [
   }),
   VerificationRecordSchema.parse({
     projectId: "https://github.com/example/limited",
+    sourceAvailability: "public-source",
+    revision,
     status: "limited",
     reviewedAt: "2026-01-01",
     checks: {
@@ -42,15 +53,17 @@ const examples = [
   }),
   VerificationRecordSchema.parse({
     projectId: "https://github.com/example/unverified",
+    sourceAvailability: "no-public-source",
+    revision: null,
     status: "unverified",
     reviewedAt: "2026-10-01",
     checks: {
       directJevCall: { outcome: "not-found", evidence: [] },
       runnableCheck: { outcome: "not-found", evidence: [] },
       publicDemo: { outcome: "not-found", evidence: [] },
-      license: { result: "unclear", evidence: [] },
-      documentationDepth: { result: "basic", evidence: [] },
-      maintenanceSignal: { result: "unknown", evidence: [] },
+      license: { result: "not-found", evidence: [] },
+      documentationDepth: { result: "not-found", evidence: [] },
+      maintenanceSignal: { result: "not-found", evidence: [] },
     },
     reviewerNotes: "未找到足够的直接证据。审阅备注与证据标签始终按纯文本处理，不能改变状态规则。",
   }),
@@ -89,6 +102,7 @@ const examples = [
           <h3>证据与期限</h3>
           <ul>
             <li>直接 Jev 调用必须使用 GitHub blob、tree、commit 或 raw 路径绑定 40 位提交修订；不接受查询参数或片段代替路径。</li>
+            <li>只有未找到公开源码且六项检查均为 not-found 的未验证记录可使用空修订；该路径不得附加不可变证据。</li>
             <li>已验证还需要通过可运行检查，或存在可核验的公开演示。</li>
             <li>许可证、文档深度、维护信号和审阅备注分别记录，不合并为分数。</li>
             <li>复核超过 90 天显示“需要复查”，旧状态不自动升级。</li>

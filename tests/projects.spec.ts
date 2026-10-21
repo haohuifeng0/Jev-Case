@@ -7,6 +7,27 @@ const malformedProjectPaths = [
   "/projects/foo%2Fbar",
   "/projects/foo%5Cbar",
 ] as const;
+const modelRoutingStatuses = {
+  "gargpratyush-jev-router": "有限验证",
+  "minilv-jev-auto-router": "有限验证",
+  "protocol-lattice-harness-router": "有限验证",
+  "ruban-24-switchboard": "已验证",
+  "ruivalim-decision-router": "有限验证",
+} as const;
+const toolSkillStatuses = {
+  "godsboy-jev-agent-skill-router": "已验证",
+  "safzanpirani-pi-jev-skill-picker": "有限验证",
+  "dicklesworthstone-skillranker": "有限验证",
+  "parkavenue9639-jevloop": "有限验证",
+  "kerpopule-hermes-jev-skills": "已验证",
+} as const;
+const riskGateStatuses = {
+  "y0usaf-pi-jev": "有限验证",
+  "leepokai-jev-guard": "有限验证",
+  "veridicaltech-edward": "有限验证",
+  "qkal-canny": "已验证",
+  "ckorhonen-jev-lint": "有限验证",
+} as const;
 
 test("lists catalog projects on the static discovery route", async ({ page }) => {
   // Given: the production catalog contains 624 unique projects.
@@ -151,6 +172,54 @@ test("opens a project relation, provenance, and assessment path truthfully", asy
     "href",
     "/services/agent-decision-assessment",
   );
+});
+
+test("renders the five model-routing statuses with dated non-live evidence", async ({ page }) => {
+  // Given: the five independently reviewed model-routing projects.
+  for (const [slug, status] of Object.entries(modelRoutingStatuses)) {
+    // When: each static project detail route is opened.
+    const response = await page.goto(`/projects/${slug}`);
+
+    // Then: its evidence-derived status, date, and no-live-call disclosure are visible.
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole("status", { name: `验证状态：${status}` })).toBeVisible();
+    await expect(page.getByText("2026-10-20")).toBeVisible();
+    await expect(page.getByText(/no live Jev call was run or claimed/i)).toBeVisible();
+    await expect(page.getByRole("heading", { name: "不可变证据" })).toBeVisible();
+  }
+});
+
+test("renders the five tool-skill statuses with dated non-live evidence", async ({ page }) => {
+  // Given: the five independently reviewed tool-skill projects.
+  for (const [slug, status] of Object.entries(toolSkillStatuses)) {
+    // When: each static project detail route is opened.
+    const response = await page.goto(`/projects/${slug}`);
+
+    // Then: its evidence-derived status, date, and no-live-call disclosure are visible.
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole("status", { name: `验证状态：${status}` })).toBeVisible();
+    await expect(page.getByText("2026-10-20")).toBeVisible();
+    await expect(page.getByText(/no live Jev call was run or claimed/i)).toBeVisible();
+    await expect(page.getByRole("heading", { name: "不可变证据" })).toBeVisible();
+  }
+});
+
+test("renders the five risk-gate statuses with dated fail-behavior caveats", async ({ page }) => {
+  // Given: the five independently reviewed risk-gate projects.
+  for (const [slug, status] of Object.entries(riskGateStatuses)) {
+    // When: each static project detail route is opened.
+    const response = await page.goto(`/projects/${slug}`);
+
+    // Then: its evidence-derived status, date, and conservative boundary disclosure are visible.
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole("status", { name: `验证状态：${status}` })).toBeVisible();
+    await expect(page.getByText("2026-10-21")).toBeVisible();
+    await expect(page.getByText(/no live Jev call was run or claimed/i)).toBeVisible();
+    await expect(page.locator(".verification-record__notes")).toContainText(
+      /fail-open|not.*security boundary|not universal.*fail-closed/i,
+    );
+    await expect(page.getByRole("heading", { name: "不可变证据" })).toBeVisible();
+  }
 });
 
 test("keeps project discovery keyboard reachable and overflow-free under reduced motion", async ({ page }) => {

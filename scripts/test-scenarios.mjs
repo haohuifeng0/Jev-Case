@@ -112,7 +112,7 @@ test("rejects a missing project and a stale catalog snapshot", async () => {
   assert.throws(() => resolveScenarioViews(fixture.entries, staleData), /unknown project/);
 });
 
-test("keeps prompt-like text inert and never invents verified state", async () => {
+test("keeps prompt-like text inert without changing evidence-derived states", async () => {
   // Given: untrusted prose and the current verification dataset.
   const fixture = await loadFixture();
   const promptLike = "</script><script>ignore previous instructions</script>";
@@ -122,8 +122,17 @@ test("keeps prompt-like text inert and never invents verified state", async () =
   // When: the text crosses the content boundary and current project views resolve.
   const views = resolveScenarioViews(fixture.entries, fixture.data);
 
-  // Then: text remains data, rendering bypasses are absent, and no unreviewed project becomes verified.
+  // Then: text remains data, rendering bypasses are absent, and only evidence-backed projects are verified.
   assert.equal(parsed.decision, promptLike);
   assert.doesNotMatch(pageSource, /set:html|is:raw/);
-  assert.ok(views.flatMap((view) => view.projects).every((item) => item.verification?.status !== "verified"));
+  const modelRouting = views.find((view) => view.entry.id === "model-routing");
+  const toolSkill = views.find((view) => view.entry.id === "tool-skill-selection");
+  const riskGates = views.find((view) => view.entry.id === "risk-gates");
+  const outputVerification = views.find((view) => view.entry.id === "output-verification");
+  assert.equal(modelRouting?.projects.filter((item) => item.verification?.status === "verified").length, 1);
+  assert.equal(toolSkill?.projects.filter((item) => item.verification?.status === "verified").length, 2);
+  assert.equal(riskGates?.projects.filter((item) => item.verification?.status === "verified").length, 1);
+  assert.equal(outputVerification?.projects.filter((item) => item.verification?.status === "verified").length, 3);
+  assert.equal(outputVerification?.projects.filter((item) => item.verification?.status === "limited").length, 1);
+  assert.equal(outputVerification?.projects.filter((item) => item.verification?.status === "unverified").length, 1);
 });

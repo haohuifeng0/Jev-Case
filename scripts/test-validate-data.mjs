@@ -16,6 +16,11 @@ const immutableEvidence = (label) => ({
   revision,
   url: `https://github.com/example/project/blob/${revision}/verification.txt`,
 });
+const runnableEvidence = (label) => ({
+  label,
+  revision,
+  url: `https://github.com/example/project/commit/${revision}/checks`,
+});
 
 const caseItem = {
   id: "case-1",
@@ -71,11 +76,13 @@ const validDatasets = () => ({
     schemaVersion: 1,
     verifications: [{
       projectId: "https://github.com/example/project",
+      sourceAvailability: "public-source",
+      revision,
       status: "verified",
       reviewedAt: "2026-01-02",
       checks: {
         directJevCall: { outcome: "pass", evidence: [immutableEvidence("Direct Jev call")] },
-        runnableCheck: { outcome: "pass", evidence: [immutableEvidence("Runnable check")] },
+        runnableCheck: { outcome: "pass", evidence: [runnableEvidence("Runnable check")] },
         publicDemo: { outcome: "not-found", evidence: [] },
         license: { result: "found", evidence: [immutableEvidence("License")] },
         documentationDepth: { result: "substantial", evidence: [immutableEvidence("Documentation")] },
@@ -173,6 +180,10 @@ test("rejects unsupported verification statuses", async () => {
 test("rejects verified status without direct-call and runnable evidence", async () => {
   const result = await runFixture((datasets) => {
     datasets["verifications.json"].verifications[0].checks.directJevCall = {
+      outcome: "not-found",
+      evidence: [],
+    };
+    datasets["verifications.json"].verifications[0].checks.runnableCheck = {
       outcome: "not-found",
       evidence: [],
     };

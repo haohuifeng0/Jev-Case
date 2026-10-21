@@ -55,8 +55,22 @@ for (const slug of scenarioSlugs) {
     await expect(hero).toHaveScreenshot(`${slug}-hero.png`, { animations: "disabled" });
     await expect(page.getByRole("heading", { name: "这个决策是什么" })).toBeVisible();
     await expect(page.locator("[data-scenario-project]")).toHaveCount(5);
-    await expect(page.locator('[data-scenario-project][data-status="verified"]')).toHaveCount(0);
+    const expectedVerified = slug === "model-routing" || slug === "risk-gates" ? 1 : slug === "tool-skill-selection" ? 2 : 3;
+    const expectedLimited = slug === "model-routing" || slug === "risk-gates" ? 4 : slug === "tool-skill-selection" ? 3 : 1;
+    const expectedUnverified = slug === "output-verification" ? 1 : 0;
+    await expect(page.locator('[data-scenario-project][data-status="verified"]')).toHaveCount(expectedVerified);
+    await expect(page.locator('[data-scenario-project][data-status="limited"]')).toHaveCount(expectedLimited);
+    await expect(page.locator('[data-scenario-project][data-status="unverified"]')).toHaveCount(expectedUnverified);
     await expect(page.getByRole("note")).toContainText("目录收录不代表推荐");
+    if (slug === "risk-gates") {
+      await expect(page.getByRole("note")).toContainText("Canny");
+      await expect(page.getByRole("note")).toContainText("本地 JSON 账本不是不可变证据或证明");
+      await expect(page.getByRole("note")).toContainText("不是沙箱、权限控制或安全边界");
+    }
+    if (slug === "output-verification") {
+      await expect(page.getByRole("note")).toContainText("Blink 是闭源公开测试版");
+      await expect(page.getByRole("note")).toContainText("未执行远程代码");
+    }
     await expect(page.getByText(/不会根据名称或关键词推断关联/)).toBeVisible();
     await expect(page.getByRole("link", { name: /决策评估/ })).toHaveAttribute(
       "href",

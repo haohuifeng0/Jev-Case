@@ -6,22 +6,20 @@ import { createServer } from "node:net";
 import { readFile } from "node:fs/promises";
 import { spawn, spawnSync } from "node:child_process";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const packageJson = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));
-const config = await readFile(path.join(root, "playwright.config.ts"), "utf8");
 const workflow = await readFile(path.join(root, ".github/workflows/ci.yml"), "utf8");
-const { default: playwrightConfig } = await import(path.join(root, "playwright.config.ts"));
 const requiredProjects = ["desktop", "mobile"];
+const defaultPlaywrightConfig = await loadPlaywrightConfig();
+const isolatedPlaywrightConfig = await loadPlaywrightConfig("4399");
 
 assert.equal(packageJson.scripts["test:smoke"], "node scripts/run-smoke.mjs");
-assert.match(config, /webServer\s*:/, "Playwright smoke tests must own the preview server lifecycle");
-assert.match(config, /exec node scripts\/start-smoke-server\.mjs/);
-assert.match(config, /reuseExistingServer:\s*false/);
-assert.match(config, /url:\s*["']http:\/\/127\.0\.0\.1:4321["']/);
+assertSmokeConfig(defaultPlaywrightConfig, "4321");
+assertSmokeConfig(isolatedPlaywrightConfig, "4399");
 const configuredProjects = new Map(
-  playwrightConfig.projects?.map((project) => [project.name, project]) ?? [],
+  defaultPlaywrightConfig.projects?.map((project) => [project.name, project]) ?? [],
 );
 for (const projectName of requiredProjects) {
   assert.equal(
@@ -64,23 +62,13 @@ const ciBuild = spawnSync("npm", ["run", "build"], {
 });
 assert.equal(ciBuild.status, 0, `${ciBuild.stdout}\n${ciBuild.stderr}`);
 
-const exactCommandPort = 4324;
-const exactCommandBlocker = createServer(() => {}).listen(exactCommandPort, "127.0.0.1");
-await new Promise((resolve) => exactCommandBlocker.once("listening", resolve));
-try {
-  const startedAt = Date.now();
-  const result = spawnSync("npm", ["run", "test:smoke"], {
-    cwd: root,
-    encoding: "utf8",
-    timeout: 3_000,
-    env: { ...process.env, SMOKE_PORT: String(exactCommandPort) },
-  });
-  assert.ok(Date.now() - startedAt < 4_500, "exact smoke command must fail promptly");
-  assert.notEqual(result.status, 0, "exact smoke command must reject an occupied port");
-  assert.match(`${result.stdout}\n${result.stderr}`, /4324.*already in use/i);
-} finally {
-  exactCommandBlocker.close();
-}
+const smokeStep = workflow.match(/- name: Run Playwright smoke tests\s+[\s\S]*?(?=\n\s+- name:|$)/)?.[0];
+assert.ok(smokeStep, "CI must run the Playwright smoke command");
+assert.match(smokeStep, /run:\s+npm run test:smoke\s*$/m);
+assert.doesNotMatch(smokeStep, /SMOKE_PORT/, "CI smoke must retain the default port 4321");
+
+await expectExactSmokeRejectsOccupiedPort();
+await expectExactSmokeRejectsOccupiedPort("4399");
 
 const occupiedPort = 4322;
 const blocker = createServer().listen(occupiedPort, "127.0.0.1");
@@ -116,8 +104,58 @@ try {
 
 console.log(JSON.stringify({
   status: "PASS",
-  checks: ["ci-build-env", "playwright-web-server", "chrome-channel", "occupied-port"],
+  checks: ["ci-build-env", "playwright-web-server", "smoke-port-consistency", "chrome-channel", "occupied-port"],
 }));
+
+async function loadPlaywrightConfig(smokePort) {
+  const previous = process.env.SMOKE_PORT;
+  if (smokePort === undefined) delete process.env.SMOKE_PORT;
+  else process.env.SMOKE_PORT = smokePort;
+  try {
+    const configUrl = pathToFileURL(path.join(root, "playwright.config.ts"));
+    configUrl.searchParams.set("smoke-port", smokePort ?? "default");
+    return (await import(configUrl.href)).default;
+  } finally {
+    if (previous === undefined) delete process.env.SMOKE_PORT;
+    else process.env.SMOKE_PORT = previous;
+  }
+}
+
+function assertSmokeConfig(playwrightConfig, expectedPort) {
+  const expectedUrl = `http://127.0.0.1:${expectedPort}`;
+  assert.equal(playwrightConfig.use?.baseURL, expectedUrl, "Playwright runner must use the resolved smoke port");
+  assert.equal(playwrightConfig.webServer?.url, expectedUrl, "Playwright preflight must use the resolved smoke port");
+  assert.equal(playwrightConfig.webServer?.command, "exec node scripts/start-smoke-server.mjs");
+  assert.equal(playwrightConfig.webServer?.reuseExistingServer, false);
+}
+
+async function expectExactSmokeRejectsOccupiedPort(smokePort) {
+  const expectedPort = Number(smokePort ?? "4321");
+  const blocker = createServer(() => {}).listen(expectedPort, "127.0.0.1");
+  await once(blocker, "listening");
+  try {
+    const startedAt = Date.now();
+    const result = spawnSync("npm", ["run", "test:smoke"], {
+      cwd: root,
+      encoding: "utf8",
+      timeout: 3_000,
+      env: smokeEnvironment(smokePort),
+    });
+    assert.ok(Date.now() - startedAt < 4_500, "exact smoke command must fail promptly");
+    assert.notEqual(result.status, 0, "exact smoke command must reject an occupied port");
+    assert.match(`${result.stdout}\n${result.stderr}`, new RegExp(`${expectedPort}.*already in use`, "i"));
+  } finally {
+    await new Promise((resolve) => blocker.close(resolve));
+  }
+  assert.equal(await waitForPort(expectedPort, 1_000, false), false, `smoke preflight must release ${expectedPort}`);
+}
+
+function smokeEnvironment(smokePort) {
+  const environment = { ...process.env };
+  if (smokePort === undefined) delete environment.SMOKE_PORT;
+  else environment.SMOKE_PORT = smokePort;
+  return environment;
+}
 
 function validatePlaywrightTestList(output) {
   const summary = output.match(/^Total:\s+(\d+)\s+tests?\s+in\s+(\d+)\s+files?$/m);

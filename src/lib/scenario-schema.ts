@@ -36,8 +36,8 @@ export const ScenarioContentSchema = z.strictObject({
   controls: z.array(nonEmptyText).min(2).readonly(),
   projectIds: z.array(projectId).length(5).readonly(),
   verificationCaveat: nonEmptyText.refine(
-    (value) => value.includes("不代表推荐") && value.includes("尚未审阅"),
-    "must state non-endorsement and unreviewed status",
+    (value) => value.includes("不代表推荐") && (value.includes("尚未审阅") || value.includes("状态仅按")),
+    "must state non-endorsement and qualify verification status",
   ),
   cta: ctaSchema,
 }).superRefine((scenario, context) => {
