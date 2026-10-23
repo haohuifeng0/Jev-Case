@@ -53,13 +53,20 @@ npm run build
 
 媒体使用公开文件地址；缺少视频时页面会显示已有封面或占位图，不影响文字内容浏览。
 
+“热门”排序的时间衰减以案例快照的 `generatedAt` 为参考点，而不是访问时间或构建时间。因此同一快照会生成相同顺序和静态字节；只有更新案例快照才会推进排序参考时间。页面中的 90 天复查标签同样相对于该快照，实时运营复查仍使用 `npm run report:verification-expiry` 的当前日期或显式 `--as-of`。
+
 ## Configuration
 
-构建时可通过环境变量设置公开域名，用于生成 canonical 和分享元数据：
+默认部署地址为 <https://haohuifeng0.github.io/Jev-Case/>。构建时通过三个公开环境变量控制 canonical、基础路径和评估表单：
 
 ```bash
-PUBLIC_SITE_URL=https://your-domain.example npm run build
+PUBLIC_SITE_URL=https://haohuifeng0.github.io \
+PUBLIC_BASE_PATH=/Jev-Case/ \
+PUBLIC_ASSESSMENT_FORM_URL=https://wenjuan.feishu.cn/m/cfm?assessment_form_id=replace-me \
+npm run build
 ```
+
+自定义域名使用其 HTTPS origin，并设置 `PUBLIC_BASE_PATH=/`。生产部署从 GitHub 仓库变量 `PUBLIC_ASSESSMENT_FORM_URL` 读取表单地址；仓库不提交真实表单 URL 或凭据。部署和回滚见 `docs/launch/`。
 
 ## Test
 
@@ -80,7 +87,7 @@ npm run test:smoke
 向明
 
 - X：[@woniu20758393](https://x.com/woniu20758393)
-- GitHub：[@Hiwoniu](https://github.com/Hiwoniu)
+- GitHub：[@haohuifeng0](https://github.com/haohuifeng0)
 
 ![微信公众号二维码](assets/wechat-qr.png)
 

@@ -17,9 +17,9 @@
 
 ## Weekly row template
 
-| Week | Accounts researched | Qualified leads | Outbound attempts | Assessment calls | Paid assessments | Paid PoCs | Delivery days committed | Decision note |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| SYN-WEEK | 0 | 0 | 0 | 0 | 0 | 0 | 0 | Synthetic row; replace only in the private worksheet |
+| Week | Accounts researched | Qualified leads | Qualified interviews | Outbound attempts | Assessment calls | Paid assessments | Paid PoCs | Delivery days committed | Decision note |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| SYN-WEEK | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | Synthetic row; replace only in the private worksheet |
 
 ## Funnel and capacity review
 
@@ -31,3 +31,5 @@
 - Qualified interviews at week 8:
 - Delivery-quality or capacity concern:
 - Decision and owner:
+
+Generate the 12-row private worksheet template with `npm run generate:kpi`. Review aggregate private data at week 8 or 12 with `npm run review:cycle -- --input <private-weekly-kpi.csv> --week 8` (or `--week 12`). Never commit the completed private worksheet.

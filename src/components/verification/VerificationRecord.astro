@@ -1,6 +1,7 @@
 ---
 import type { VerificationRecord } from "../../lib/verification-schema";
 import { getReviewFreshness, type VerificationStatus } from "../../lib/verification-rules";
+import { getGeneratedAt } from "../../lib/cases";
 
 interface Props {
   record: VerificationRecord;
@@ -8,7 +9,7 @@ interface Props {
   today?: Date;
 }
 
-const { record, illustrative = false, today = new Date() } = Astro.props;
+const { record, illustrative = false, today = new Date(getGeneratedAt()) } = Astro.props;
 const freshness = getReviewFreshness(record.reviewedAt, today);
 const statusCopy = {
   verified: { label: "已验证", summary: "有直接 Jev 调用证据，并通过可运行检查或公开演示。" },

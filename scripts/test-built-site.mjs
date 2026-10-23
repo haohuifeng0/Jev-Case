@@ -5,8 +5,8 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 const distDirectory = fileURLToPath(new URL("../dist/", import.meta.url));
-const expectedSiteUrl = process.env.EXPECTED_SITE_URL ?? "https://hiwoniu.github.io";
-const expectedBasePath = `/${(process.env.EXPECTED_BASE_PATH ?? "/Jev-Case").split("/").filter(Boolean).join("/")}`;
+const expectedSiteUrl = process.env.EXPECTED_SITE_URL ?? "https://haohuifeng0.github.io";
+const expectedBasePath = `/${(process.env.EXPECTED_BASE_PATH ?? "/Jev-Case/").split("/").filter(Boolean).join("/")}`;
 const expectedRoot = new URL(expectedBasePath === "/" ? "/" : `${expectedBasePath}/`, expectedSiteUrl).toString();
 
 async function collectFiles(directory, suffix) {

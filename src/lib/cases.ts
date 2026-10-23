@@ -18,7 +18,7 @@ export function getGeneratedAt(): string {
 
 export function getHotScore(
   item: CaseItem,
-  referenceTime = Date.now(),
+  referenceTime: number,
 ): number {
   const { views, likes, bookmarks, reposts } = item.metrics;
   const signal =

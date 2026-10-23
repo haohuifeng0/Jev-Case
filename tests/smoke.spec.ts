@@ -45,6 +45,29 @@ test("renders the case wall and filters React state", async ({ page }) => {
   await expect(page.getByText("没有匹配的案例")).toBeVisible();
 });
 
+test("hydrates the snapshot-relative hot order without changing static markup", async ({ browser, baseURL, page }) => {
+  const origin = baseURL ?? "http://127.0.0.1:4321";
+  const staticContext = await browser.newContext({ javaScriptEnabled: false });
+  const localOrigin = new URL(origin).origin;
+  await staticContext.route((url) => url.origin !== localOrigin, (route) => route.abort("blockedbyclient"));
+  const staticPage = await staticContext.newPage();
+  await staticPage.goto(origin, { waitUntil: "domcontentloaded" });
+  const staticCard = staticPage.locator(".case-card").first();
+  const staticHref = await staticCard.getAttribute("href");
+  const staticHotScore = await staticCard.getAttribute("data-hot");
+  await staticContext.close();
+
+  const hydrationErrors: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error" && /hydrat/iu.test(message.text())) hydrationErrors.push(message.text());
+  });
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await page.waitForFunction(() => document.querySelector('[data-case-wall-ready="true"]') !== null);
+  await expect(page.locator(".case-card").first()).toHaveAttribute("href", staticHref ?? "");
+  await expect(page.locator(".case-card").first()).toHaveAttribute("data-hot", staticHotScore ?? "");
+  expect(hydrationErrors).toEqual([]);
+});
+
 test("renders a static case page with source metadata", async ({ page }) => {
   await page.goto("/case/2100356151468585346", { waitUntil: "domcontentloaded" });
   await expect(page.locator(".origin-text")).toContainText("trading bot");

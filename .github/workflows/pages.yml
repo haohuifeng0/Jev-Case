@@ -1,0 +1,79 @@
+name: GitHub Pages
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      PUBLIC_SITE_URL: https://haohuifeng0.github.io
+      PUBLIC_BASE_PATH: /Jev-Case/
+      PUBLIC_ASSESSMENT_FORM_URL: ${{ vars.PUBLIC_ASSESSMENT_FORM_URL }}
+      LAUNCH_REQUIRE_CLEAN: "true"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Require public assessment form variable
+        run: |
+          if [ -z "$PUBLIC_ASSESSMENT_FORM_URL" ]; then
+            echo "PUBLIC_ASSESSMENT_FORM_URL repository variable is required for Pages builds." >&2
+            exit 1
+          fi
+
+      - name: Pin launch report date
+        run: echo "LAUNCH_AS_OF=$(date -u +%F)" >> "$GITHUB_ENV"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run launch checks and immutable dry run
+        run: npm run launch:dry-run
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+      - name: Upload launch manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: launch-dry-run-${{ github.sha }}
+          path: launch-artifacts/
+          retention-days: 30
+
+  deploy:
+    if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Deploy Pages artifact
+        id: deployment
+        uses: actions/deploy-pages@v4

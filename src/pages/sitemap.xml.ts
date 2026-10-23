@@ -12,7 +12,7 @@ const staticPaths = [
 ] as const;
 
 export const GET: APIRoute = async ({ site }) => {
-  const siteUrl = site?.toString() ?? "https://hiwoniu.github.io";
+  const siteUrl = site?.toString() ?? "https://haohuifeng0.github.io";
   const basePath = import.meta.env.BASE_URL;
   const scenarios = await getCollection("scenarios");
   const paths = [

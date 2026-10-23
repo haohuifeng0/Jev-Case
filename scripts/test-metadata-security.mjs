@@ -20,7 +20,7 @@ test("serializes hostile JSON-LD without executable script terminators", () => {
 
 test("applies one normalized base path to internal and canonical URLs", () => {
   // Given: the production origin and GitHub Pages base contract.
-  const siteUrl = "https://hiwoniu.github.io";
+  const siteUrl = "https://haohuifeng0.github.io";
   const basePath = "/Jev-Case/";
 
   // When: root and nested paths are resolved.
@@ -31,11 +31,11 @@ test("applies one normalized base path to internal and canonical URLs", () => {
   assert.equal(withBasePath("/Jev-Case/404", basePath), "/Jev-Case/404");
   assert.equal(
     canonicalUrl("/projects/example", siteUrl, basePath),
-    "https://hiwoniu.github.io/Jev-Case/projects/example",
+    "https://haohuifeng0.github.io/Jev-Case/projects/example",
   );
   assert.equal(
     canonicalUrl("/Jev-Case/", siteUrl, basePath),
-    "https://hiwoniu.github.io/Jev-Case/",
+    "https://haohuifeng0.github.io/Jev-Case/",
   );
   assert.equal(
     canonicalUrl("/custom/projects", "https://example.com", "/custom"),

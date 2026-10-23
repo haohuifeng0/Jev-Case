@@ -26,6 +26,12 @@
     "validate:operations": "node scripts/validate-operations.mjs --check",
     "test:operations": "node --test scripts/test-operations-content-safety.mjs && node scripts/test-operations.mjs",
     "test:ci-config": "node scripts/test-ci-config-regression.mjs && node scripts/test-ci-order.mjs",
+    "catalog:cadence": "node scripts/check-catalog-refresh.mjs",
+    "report:verification-expiry": "node scripts/report-verification-expiry.mjs",
+    "generate:kpi": "node scripts/generate-kpi-worksheet.mjs",
+    "review:cycle": "node scripts/review-operating-cycle.mjs",
+    "launch:dry-run": "node scripts/launch-dry-run.mjs",
+    "test:launch": "node --test scripts/test-launch-readiness.mjs scripts/test-launch-tools.mjs && node scripts/test-static-build-determinism.mjs",
     "test:smoke": "node scripts/run-smoke.mjs"
   },
   "dependencies": {
